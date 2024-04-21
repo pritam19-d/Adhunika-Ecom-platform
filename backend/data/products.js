@@ -1,12 +1,12 @@
 const products = [
   {
-    name: 'Airpods Wireless Bluetooth Headphones',
-    image: '/images/airpods.jpg',
+    name: "Jamdani Saree",
+    image: '/images/jamdani.jpg',
     description:
-      'Bluetooth technology lets you connect it with compatible devices wirelessly High-quality AAC audio offers immersive listening experience Built-in microphone allows you to take calls while working',
-    brand: 'Apple',
-    category: 'Electronics',
-    price: 89.99,
+      "Jamdani sarees, crafted with intricate handloom weaving techniques, epitomize the exquisite artistry of Bengal. Known for their delicate motifs and fine muslin fabric, each Jamdani tells a tale of heritage and elegance, making it a cherished treasure in every woman's wardrobe.",
+    brand: 'Silk Matka Maslin',
+    category: 'Ladies_Wear',
+    price: 7499,
     countInStock: 10,
     rating: 4.5,
     numReviews: 12,
