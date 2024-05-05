@@ -19,7 +19,9 @@
     "bcryptjs": "^2.4.3",
     "colors": "^1.4.0",
     "express": "^4.19.2",
-    "mongoose": "^8.3.1"
+    "mongodb": "^6.5.0",
+    "mongoose": "^8.3.2",
+    "node": "^18.20.2"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
