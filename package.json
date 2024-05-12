@@ -21,7 +21,8 @@
     "express": "^4.19.2",
     "mongodb": "^6.5.0",
     "mongoose": "^8.3.2",
-    "node": "^18.20.2"
+    "node": "^18.20.2",
+    "react-redux": "^9.1.2"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",

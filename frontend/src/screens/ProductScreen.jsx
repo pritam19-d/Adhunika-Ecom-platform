@@ -81,7 +81,7 @@ const ProductScreen = () => {
                         value={qty}
                         onChange={(e)=> setQty(Number(e.target.value))}>
                           {[...Array(product.countInStock).keys()].map((n)=>(
-                            <option key= {n+1} value={n+1}>{n}</option>
+                            <option key= {n+1} value={n+1}>{n+1}</option>
                           ))}
                         </Form.Control>
                       </Col>
