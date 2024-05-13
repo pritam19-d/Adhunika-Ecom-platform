@@ -12,7 +12,7 @@ const Loader = ()=>{
       margin: "auto",
       display: "block"
     }}
-  ></Spinner>
+  >Please Wait...</Spinner>
 }
 
 export default Loader
