@@ -47,14 +47,14 @@ const getUsers = asyncHandler (async (req, res)=>{
 //@route  GET/api/users/:id
 //@access Private/Admin
 const getUsersByID = asyncHandler (async (req, res)=>{
-  res.send("Get user by id")
+  res.send("Get user by ID")
 })
 
 //@desc   Delete Users
 //@route  DLEETE/api/users/:id
 //@access Private/Admin
 const deleteUser = asyncHandler (async (req, res)=>{
-  res.send("Get users")
+  res.send("Delete user")
 })
 
 //@desc   Update Users by ID
