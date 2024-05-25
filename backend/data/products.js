@@ -12,10 +12,10 @@ const products = [
     numReviews: 12,
   },
   {
-    name: 'Churidar Navy Blue with golden boutique',
+    name: 'Salwar Navy Blue with golden boutique',
     image: '/images/churidar.jpg',
     description:
-      'Churidar is a type of traditional Indian clothing with form-fitting trousers that are snug around the legs and gathered at the ankles. They are often paired with a kameez or tunic, creating an elegant and sleek look.',
+      'Salwar is a type of traditional Indian clothing with form-fitting trousers that are snug around the legs and gathered at the ankles. They are often paired with a kameez or tunic, creating an elegant and sleek look.',
     brand: 'Manyavar',
     category: 'Ladies_wear',
     price: 999,
@@ -60,10 +60,10 @@ const products = [
     numReviews: 10,
   },
   {
-    name: 'Ghagra for Kids',
+    name: 'Lahenga for Kids',
     image: '/images/kids.jpg',
     description:
-      'Ghagra is a traditional Indian outfit consisting of a long, flared skirt paired with a matching blouse and often a dupatta. It features vibrant colors, intricate embroidery, and playful designs, making it a popular choice for festivals and special occasions for kids.',
+      'Lahenga is a traditional Indian outfit consisting of a long, flared skirt paired with a matching blouse and often a dupatta. It features vibrant colors, intricate embroidery, and playful designs, making it a popular choice for festivals and special occasions for kids.',
     brand: 'Fabindia',
     category: 'kids_wear',
     price: 999,
