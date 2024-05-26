@@ -2,9 +2,11 @@ import jwt from 'jsonwebtoken'
 import asyncHandler from "./asyncHandler.js"
 import User from "../models/userModel.js"
 
-//Protect Routes
+//Protect Middleware
 const protect = asyncHandler(async (req, res, next)=>{
-  let token = req.token.jwt
+  let token;
+  // Read the JWT form cookie
+  token = req.cookies.jwt
   if (token){
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET)
@@ -20,7 +22,7 @@ const protect = asyncHandler(async (req, res, next)=>{
   }
 })
 
-// Admin routes
+// Admin Middleware
 const admin  = (req, res, )=>{
   if (req.user && req.user.isAdmin) {
     next()
