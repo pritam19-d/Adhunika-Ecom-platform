@@ -105,9 +105,9 @@ const updateUserProfile = asyncHandler (async (req, res)=>{
     const updateUser = await user.save()
     res.status(200).json({
       _id: updateUser._id,
-      name: user.name,
-      email: user.email,
-      isAdmin: user.isAdmin
+      name: updateUser.name,
+      email: updateUser.email,
+      isAdmin: updateUser.isAdmin
     })
   } else{
       res.status(404)
