@@ -81,7 +81,7 @@ const RegisterScreen = () => {
             ></Form.Control>
           </Form.Group>
           <Form.Group controlId="confirmpassword" className="my-3">
-            <Form.Label>Retype Password</Form.Label>
+            <Form.Label>Retype Your Password</Form.Label>
             <Form.Control
               type="password"
               placeholder="Confirm password"
