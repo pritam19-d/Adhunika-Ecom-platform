@@ -32,6 +32,7 @@ const PaymentScreen = () => {
     <FormContainer>
       <CheckoutSteps step1 step2 step3 />
       <h1>Payment Method</h1>
+      <hr />
       <Form onSubmit={submitHandler}>
         <Form.Group>
           <Form.Label as="legend">Select method</Form.Label>
