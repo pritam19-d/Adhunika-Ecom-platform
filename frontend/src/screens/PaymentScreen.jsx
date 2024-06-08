@@ -40,10 +40,20 @@ const PaymentScreen = () => {
             <Form.Check
               type="radio"
               className="my-2"
-              label="Gpaay or Card"
+              label="Google Pay (Default)"
               id="Gpay"
               value="Gpay"
-              checked
+              checked={"Gpay"===paymentMethod}
+              onClick={(e)=> setPaymentMethod(e.target.value)}
+            />
+            <Form.Check
+              type="radio"
+              className="my-2"
+              label="Cash on Delivary"
+              id="COD"
+              value="COD"
+              checked={"COD"===paymentMethod}
+              onClick={(e)=> setPaymentMethod(e.target.value)}
             />
           </Col>
         </Form.Group>

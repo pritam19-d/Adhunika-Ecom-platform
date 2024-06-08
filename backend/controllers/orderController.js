@@ -20,12 +20,12 @@ const addOrderItems = asyncHandler (async (req, res)=>{
     throw new Error("No Order Items.")
   } else {
     const order = new Order({
-      orderItems: orderItems.map((i)={
+      orderItems: orderItems.map((i)=>({
         ...i,
         product: i._id,
         _id: undefined
-      }),
-      user: req.user._id,
+      })),
+      user: req.user_id,
       shippingAddress,
       paymentMethod,
       itemsPrice,
