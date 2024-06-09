@@ -49,11 +49,12 @@ const PaymentScreen = () => {
             <Form.Check
               type="radio"
               className="my-2"
-              label="Cash on Delivary"
+              label="Cash on Delivary (For orders less than ₹10000)"
               id="COD"
               value="COD"
               checked={"COD"===paymentMethod}
               onClick={(e)=> setPaymentMethod(e.target.value)}
+              disabled={cart.totalPrice - cart.taxPrice > 10000}
             />
           </Col>
         </Form.Group>
