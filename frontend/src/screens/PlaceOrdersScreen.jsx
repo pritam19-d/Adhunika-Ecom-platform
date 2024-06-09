@@ -34,9 +34,9 @@ const PlaceOrdersScreen = () => {
         shippingPrice: cart.shippingPrice,
         taxPrice: cart.taxPrice,
         totalPrice: cart.totalPrice
-      }).unwrap
+      }).unwrap()
       dispatch(clearCartItems())
-      navigate(`/order/${res.order}`)
+      navigate(`/order/${res._id}`)
     } catch (err) {
       toast.error(err)
     }
@@ -77,7 +77,7 @@ const PlaceOrdersScreen = () => {
                         />
                       </Col>
                       <Col>
-                        <Link to={`/product/${item.order}`}>
+                        <Link to={`/product/${item._id}`}>
                           {item.name}
                         </Link>
                       </Col>
