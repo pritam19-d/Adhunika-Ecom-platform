@@ -51,7 +51,7 @@ const OrderScreen = () => {
     })
   }
   async function onApproveTest() {
-    await payOrder({orderId, details: { payer: {} }})
+    await payOrder({orderId, details: { payer: {} } }).unwrap()
     refetch();
     toast.success("Payment Successful!")
   }
@@ -150,7 +150,7 @@ const OrderScreen = () => {
                         {loadingPay && <Loader />}
                         {isPending ? <Loader /> : (
                           <div>
-                            <Button onClick={onApproveTest} style={{ marginBottom: "10px" }}>
+                            <Button onClick={onApproveTest} style={{ marginBottom: "10px" }} variant="dark">
                               Test Pay Order
                             </Button>
                             <div>
