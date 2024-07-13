@@ -20,13 +20,13 @@ const OrderScreen = () => {
   const { userInfo } = useSelector((state) => state.auth)
 
   useEffect(() => {
-    if (!errorPayPal && !loadingPayPal && !paypal.clientId) {
+    if (!errorPayPal && !loadingPayPal && paypal.clientId) {
       const loadPayPalScript = async () => {
         paypalDispatch({
           type: "resetOptions",
           value: {
             "client-id": paypal.clientId,
-            currency: "INR"
+            currency: "USD"
           }
         })
         paypalDispatch({ type: "setLoadingStatus", value: "pending" })
@@ -153,13 +153,11 @@ const OrderScreen = () => {
                             <Button onClick={onApproveTest} style={{ marginBottom: "10px" }} variant="dark">
                               Test Pay Order
                             </Button>
-                            <div>
                               <PayPalButtons
                                 createOrder={createOrder}
                                 onApprove={onApprove}
                                 onError={onError}
                               ></PayPalButtons>
-                            </div>
                           </div>
                         )}
                       </ListGroup.Item>
