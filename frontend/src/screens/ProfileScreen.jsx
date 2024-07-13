@@ -6,8 +6,10 @@ import { useDispatch, useSelector } from "react-redux"
 import { toast } from "react-toastify"
 import Message from "../components/Message"
 import Loader from "../components/Loader"
+import { FaTimes } from "react-icons/fa"
 import { useProfileMutation } from "../slicers/usersApiSlice"
 import { setCredentials } from "../slicers/authSlice"
+import { useGetMyOrdersQuery } from "../slicers/orderApiSlices"
 
 const ProfileScreen = () => {
   const [name, setName] = useState("")
@@ -19,23 +21,25 @@ const ProfileScreen = () => {
 
   const { userInfo } = useSelector((state) => state.auth)
 
-  const [updateProfile, {isLoading: loadingUpdateProfile}] = useProfileMutation() 
+  const [updateProfile, { isLoading: loadingUpdateProfile }] = useProfileMutation()
 
-  useEffect(()=>{
-    if (userInfo){
+  const { data: orders, isLoading, error } = useGetMyOrdersQuery()
+
+  useEffect(() => {
+    if (userInfo) {
       setName(userInfo.name)
       setEmail(userInfo.email)
     }
   }, [userInfo, userInfo.name, userInfo.email])
 
-  const submitHandler = async(e) =>{
+  const submitHandler = async (e) => {
     e.preventDefault()
     console.log("Submitted")
-    if (password != confirmPassword){
+    if (password !== confirmPassword) {
       toast.error("Retype the Password correctly")
     } else {
       try {
-        const res = await updateProfile({ _id:userInfo._id , name, email, password }).unwrap()
+        const res = await updateProfile({ _id: userInfo._id, name, email, password }).unwrap()
         dispatch(setCredentials(res))
         toast.success("Profile Updated Successfully")
       } catch (err) {
@@ -55,7 +59,7 @@ const ProfileScreen = () => {
               type="name"
               placeholder="Enter your name"
               value={name}
-              onChange={(e)=> setName(e.target.value)}
+              onChange={(e) => setName(e.target.value)}
             ></Form.Control>
           </Form.Group>
           <Form.Group controlId="email" className="my-2">
@@ -64,7 +68,7 @@ const ProfileScreen = () => {
               type="email"
               placeholder="Enter your email ID"
               value={email}
-              onChange={(e)=> setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
             ></Form.Control>
           </Form.Group>
           <Form.Group controlId="password" className="my-2">
@@ -73,7 +77,7 @@ const ProfileScreen = () => {
               type="password"
               placeholder="Enter your Password"
               value={password}
-              onChange={(e)=> setPassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
             ></Form.Control>
           </Form.Group>
           <Form.Group controlId="confirmPassword" className="my-2">
@@ -82,14 +86,36 @@ const ProfileScreen = () => {
               type="password"
               placeholder="Confirm password"
               value={confirmPassword}
-              onChange={(e)=> setConfirmPassword(e.target.value)}
+              onChange={(e) => setConfirmPassword(e.target.value)}
             ></Form.Control>
           </Form.Group>
           <Button type="submit" variant="dark" className="my-2">Update</Button>
-          { loadingUpdateProfile && <Loader /> }
+          {loadingUpdateProfile && <Loader />}
         </Form>
       </Col>
-      <Col md={9}>Column</Col>
+      <Col md={9}>
+        <h2>My Orders</h2>
+        {isLoading ? 
+          <Loader />
+        : error ? (
+          <Message variant="danger">
+            {error?.data?.message || error.error}
+          </Message>
+        ) : (
+          <Table striped hover responsive className="table-sm">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Date</th>
+                <th>Total</th>
+                <th>Paid</th>
+                <th>Delivered</th>
+                <th></th>
+              </tr>
+            </thead>
+          </Table>
+        )}
+      </Col>
     </Row>
   )
 }

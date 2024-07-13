@@ -8,7 +8,7 @@ import CheckoutSteps from "../components/CheckoutSteps"
 import { savePaymentMethod } from "../slicers/cartSlice"
 
 const PaymentScreen = () => {
-  const [paymentMethod, setPaymentMethod] = useState("GPay")
+  const [paymentMethod, setPaymentMethod] = useState("PayPal")
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -40,10 +40,10 @@ const PaymentScreen = () => {
             <Form.Check
               type="radio"
               className="my-2"
-              label="Google Pay (Default)"
-              id="Gpay"
-              value="Gpay"
-              checked={"Gpay"===paymentMethod}
+              label="PayPal"
+              id="PayPal"
+              value="PayPal"
+              checked={"PayPal"===paymentMethod}
               onClick={(e)=> setPaymentMethod(e.target.value)}
             />
             <Form.Check
