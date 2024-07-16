@@ -6,13 +6,14 @@ import Message from "../components/Message"
 import Loader from "../components/Loader"
 import { toast } from "react-toastify"
 import { useSelector } from "react-redux"
-import { useGetOrderDetailsQuery, usePayOrderMutation, useGetPayPalClientIdQuery } from "../slicers/orderApiSlices"
+import { useGetOrderDetailsQuery, usePayOrderMutation, useGetPayPalClientIdQuery, useDeliverOrderMutation } from "../slicers/orderApiSlices"
 
 const OrderScreen = () => {
   const { id: orderId } = useParams()
 
   const { data: order, refetch, isLoading, error } = useGetOrderDetailsQuery(orderId)
   const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation()
+  const [deliverOrder, { isLoading: loadingDeliver }] = useDeliverOrderMutation()
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer()
 
   const { data: paypal, isLoading: loadingPayPal, error: errorPayPal } = useGetPayPalClientIdQuery()
@@ -50,11 +51,11 @@ const OrderScreen = () => {
       }
     })
   }
-  async function onApproveTest() {
-    await payOrder({orderId, details: { payer: {} } }).unwrap()
-    refetch();
-    toast.success("Payment Successful!")
-  }
+  // async function onApproveTest() {
+  //   await payOrder({orderId, details: { payer: {} } }).unwrap()
+  //   refetch();
+  //   toast.success("Payment Successful!")
+  // }
   function onError(err) {
     toast.error(err.message)
   }
@@ -68,6 +69,16 @@ const OrderScreen = () => {
     }).then((orderId)=>{
       return orderId
     })
+  }
+  
+  const deliverOrderHandler = async ()=>{
+    try {
+      await deliverOrder (orderId).unwrap()
+      refetch()
+      toast.success("Order Delivered")
+    } catch (err) {
+      toast.error(err?.data?.message || err.message)
+    }
   }
 
   return (
@@ -149,20 +160,24 @@ const OrderScreen = () => {
                       <ListGroup.Item>
                         {loadingPay && <Loader />}
                         {isPending ? <Loader /> : (
-                          <div>
-                            <Button onClick={onApproveTest} style={{ marginBottom: "10px" }} variant="dark">
+                            /* <Button onClick={onApproveTest} style={{ marginBottom: "10px" }} variant="dark">
                               Test Pay Order
-                            </Button>
+                            </Button> */
                               <PayPalButtons
                                 createOrder={createOrder}
                                 onApprove={onApprove}
                                 onError={onError}
                               ></PayPalButtons>
-                          </div>
                         )}
                       </ListGroup.Item>
                     )}
                     {/* MARK AS DELIVERED PLACEHOLDER */}
+                    {loadingDeliver && <Loader />}
+                    {userInfo && userInfo.isAdmin && order.isPaid && !order.isDelivered && (
+                      <ListGroup.Item>
+                        <Button className="btn-secondary" onClick={deliverOrderHandler}>Mark As Delivered</Button>
+                      </ListGroup.Item>
+                    )}
                   </ListGroup>
                 </Card>
               </Col>
