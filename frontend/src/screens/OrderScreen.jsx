@@ -145,7 +145,7 @@ const OrderScreen = () => {
                         <Col>₹{order.totalPrice}</Col>
                       </Row>
                     </ListGroup.Item>
-                    {!order.isPaid && (
+                    {!order.isPaid && order.paymentMethod !== "COD" &&(
                       <ListGroup.Item>
                         {loadingPay && <Loader />}
                         {isPending ? <Loader /> : (
