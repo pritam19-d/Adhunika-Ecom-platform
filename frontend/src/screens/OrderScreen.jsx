@@ -102,7 +102,7 @@ const OrderScreen = () => {
                       <b>Address: </b>{order.shippingAddress.address}, {order.shippingAddress.city}. Dist- {order.shippingAddress.district}, PIN- {order.shippingAddress.pinCode}
                     </p>
                     <p>{order.isDelivered ?
-                      (<Message variant="success">Delivered on {order.deliveredAt}</Message>) :
+                      (<Message variant="success">Delivered on {order.deliveredDate.substring(0, 10)}</Message>) :
                       (<Message variant="danger">Yet to be deliver.</Message>)
                     }
                     </p>
@@ -111,7 +111,7 @@ const OrderScreen = () => {
                     <h2>Payment Method</h2>
                     <p><b>Method: </b>{order.paymentMethod}</p>
                     {order.isPaid ? (
-                      <Message variant="success">Paid on {order.paidAt}</Message>
+                      <Message variant="success">Paid on {order.paidAt.substring(0, 10)}</Message>
                     ) : (
                       <Message variant="danger">Payment not received yet</Message>
                     )}
