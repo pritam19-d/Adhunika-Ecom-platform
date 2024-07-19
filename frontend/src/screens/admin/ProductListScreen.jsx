@@ -52,9 +52,9 @@ const ProductListScreen = () => {
                         <FaEdit />
                       </Button>
                     </LinkContainer>
-                      <Button variant="light" className="btn-sm mx-2" style={{"color":"black"}} onClick={()=>deleteHandler(product._id)}>
-                        <FaTrash />
-                      </Button>
+                    <Button variant="light" className="btn-sm mx-2" style={{"color":"black"}} onClick={()=>deleteHandler(product._id)}>
+                      <FaTrash />
+                    </Button>
                   </td>
                 </tr>
               ))}
