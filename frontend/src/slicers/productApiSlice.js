@@ -29,7 +29,7 @@ export const productApiSlice = apiSlice.injectEndpoints({
         method: "PUT",
         body: data
       }),
-      invalidatesTags: ["Product"]
+      invalidatesTags: ["Products"]
     })
   })
 })
