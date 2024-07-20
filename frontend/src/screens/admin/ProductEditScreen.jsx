@@ -53,7 +53,6 @@ const ProductEditScreen = () => {
       const res = await uploadProductImage(formData).unwrap()
       toast.success(res.message)
       setImage(res.image)
-      console.log(e.target.files[0]);
     } catch (err) {
       toast.error(err?.data?.message || err.error)
       console.log("error", err?.data?.message || err.error);
@@ -66,6 +65,7 @@ const ProductEditScreen = () => {
       <FormContainer>
         <h1>Edit Product</h1>
         {loadingUpdate && <Loader />}
+        {loadingUpload && <Loader />}
         {isLoading ? <Loader />: 
         error ? <Message variant="danger">{error}</Message>:(
           <Form onSubmit={submitHandler}>
