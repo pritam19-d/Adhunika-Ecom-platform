@@ -6,7 +6,7 @@ import Message from "../../components/Message"
 import Loader from "../../components/Loader"
 import FormContainer from "../../components/FormContainer"
 import { toast } from "react-toastify"
-import { useUpdateAnyProductMutation, useGetProductDetailsQuery } from "../../slicers/productApiSlice"
+import { useUpdateAnyProductMutation, useGetProductDetailsQuery, useUploadProductImageMutation } from "../../slicers/productApiSlice"
 
 const ProductEditScreen = () => {
   const {id: productId } = useParams()
@@ -16,26 +16,24 @@ const ProductEditScreen = () => {
   const [category, setCategory] = useState("")
   const [countInStock, setStockCount] = useState()
   const [description, setDescription] = useState("")
-  // const [image, setImage] = useState("")
+  const [image, setImage] = useState("")
 
   const { data: product, isLoading, refetch, error } = useGetProductDetailsQuery(productId)
   const [updateAnyProduct, {isLoading: loadingUpdate}] = useUpdateAnyProductMutation()
+  const [uploadProductImage, {isLoading: loadingUpload}] = useUploadProductImageMutation()
   const navigate = useNavigate()
 
   const submitHandler = async (e)=>{
     e.preventDefault()
-    console.log(productId);
-
-    const updatedProduct = {productId, name, price, category, countInStock, description}
-    const result = await updateAnyProduct(updatedProduct)
-
-    if (result.error) {
-      toast.error(result.error)
-    } else {
-      toast.success("Product Updated")
-      navigate("/admin/productlist")
+    try {
+      await updateAnyProduct({productId, name, price, category, countInStock, description, image}).unwrap(); // NOTE: here we need to unwrap the Promise to catch any rejection in our catch block
+      toast.success('Product updated');
+      refetch();
+      navigate('/admin/productlist');
+    } catch (err) {
+      toast.error(err?.data?.message || err.error);
     }
-  }
+  };
 
   useEffect(()=>{
     if(product){
@@ -44,9 +42,23 @@ const ProductEditScreen = () => {
       setCategory(product.category)
       setStockCount(product.countInStock)
       setDescription(product.description)
-      // setImage(product.image)
+      setImage(product.image)
     }
   },[product, productId])
+
+  const uploadFileHandler = async (e)=>{
+    const formData = new FormData()
+    formData.append("image", e.target.files[0]);
+    try {
+      const res = await uploadProductImage(formData).unwrap()
+      toast.success(res.message)
+      setImage(res.image)
+      console.log(e.target.files[0]);
+    } catch (err) {
+      toast.error(err?.data?.message || err.error)
+      console.log("error", err?.data?.message || err.error);
+    }
+  }
 
   return (
     <>
@@ -57,7 +69,7 @@ const ProductEditScreen = () => {
         {isLoading ? <Loader />: 
         error ? <Message variant="danger">{error}</Message>:(
           <Form onSubmit={submitHandler}>
-            <Form.Group controlId="name" className="my-2" >
+            <Form.Group controlId="name" className="my-3" >
               <Form.Label>Name</Form.Label>
               <Form.Control
                 type="text"
@@ -66,7 +78,7 @@ const ProductEditScreen = () => {
                 onChange={(e)=>setName(e.target.value)}
               />
             </Form.Group>
-            <Form.Group controlId="price" className="my-2">
+            <Form.Group controlId="price" className="my-3">
               <Form.Label>Product Price</Form.Label>
               <Form.Control
                 type="number"
@@ -76,7 +88,21 @@ const ProductEditScreen = () => {
               />
             </Form.Group>
             {/* IMAGE INPUT PLACEHOLDER */}
-            <Form.Group controlId="category" className="my-2">
+            <Form.Group controlId="image" className="my-3">
+              <Form.Label>Upload Product Image</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter image url"
+                value={image}
+                onChange={(e)=>setImage()}
+              />
+              <Form.Control
+                type="file"
+                label="Upload File"
+                onChange={uploadFileHandler}
+              />
+            </Form.Group>
+            <Form.Group controlId="category" className="my-3">
               <Form.Label>Category</Form.Label>
               <Form.Control
                 type="text"
@@ -85,7 +111,7 @@ const ProductEditScreen = () => {
                 onChange={(e)=>setCategory(e.target.value)}
               />
             </Form.Group>
-            <Form.Group controlId="stock" className="my-2">
+            <Form.Group controlId="stock" className="my-3">
               <Form.Label>Stock</Form.Label>
               <Form.Control
                 type="number"
@@ -94,7 +120,7 @@ const ProductEditScreen = () => {
                 onChange={(e)=>setStockCount(e.target.value)}
               />
             </Form.Group>
-            <Form.Group controlId="description" className="my-2">
+            <Form.Group controlId="description" className="my-3">
               <Form.Label>Product Description</Form.Label>
               <Form.Control
                 type="text"
