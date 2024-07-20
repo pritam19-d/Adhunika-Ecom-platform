@@ -27,7 +27,6 @@ const ProductListScreen = () => {
     if(window.confirm("Are you sure to delete the product?")){
       try {
         await deleteAnyProduct(id)
-        console.log("Deletion Success!");
         toast.success("Successfully deleted the product from your database.")
         refetch()
       } catch (err) {
