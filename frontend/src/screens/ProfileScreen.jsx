@@ -34,7 +34,6 @@ const ProfileScreen = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault()
-    console.log("Submitted")
     if (password !== confirmPassword) {
       toast.error("Retype the Password correctly")
     } else {

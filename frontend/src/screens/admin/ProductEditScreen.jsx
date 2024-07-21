@@ -87,7 +87,6 @@ const ProductEditScreen = () => {
                 onChange={(e)=>setPrice(e.target.value)}
               />
             </Form.Group>
-            {/* IMAGE INPUT PLACEHOLDER */}
             <Form.Group controlId="image" className="my-3">
               <Form.Label>Upload Product Image</Form.Label>
               <Form.Control
@@ -133,7 +132,6 @@ const ProductEditScreen = () => {
               type="submit"
               variant="dark"
               className="my-2"
-              
             >Update</Button>
           </Form>
         )}
