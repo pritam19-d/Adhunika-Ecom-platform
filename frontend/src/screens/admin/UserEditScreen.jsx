@@ -15,6 +15,7 @@ const UserEditScreen = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isAdmin, setIsAdmin] = useState(false)
+  const [passLen, setPassLen] = useState(10)
 
   const { data: user, isLoading, refetch, error } = useGetUserDetailQuery(userId)
   const [updateUser, { isLoading: loadingUpdate }] = useUpdateUserMutation()
@@ -32,13 +33,21 @@ const UserEditScreen = () => {
     e.preventDefault()
     try {
       await updateUser({ userId, name, email, password, isAdmin }).unwrap();
-      toast.success('User Details updated');
+      toast.success('User Details Updated Successfully.');
       refetch();
       navigate('/admin/userlist');
     } catch (err) {
       toast.error(err?.data?.message || err.error);
     }
   };
+  const generateHandler = ()=>{
+    const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-';
+    let generatedPassword = ""
+    for (let i = 1, n = charset.length; i <= passLen; ++i) {
+      generatedPassword += charset.charAt(Math.floor(Math.random() * n));
+    }
+    setPassword(generatedPassword)
+  }
 
   return (
     <>
@@ -70,12 +79,20 @@ const UserEditScreen = () => {
               <Form.Group controlId="password" className="my-2">
                 <Form.Label>Password</Form.Label>
                 <Form.Control
-                  type="password"
+                  type="text"
                   placeholder="Enter New Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  />
+                />
+                <Form.Label>Set Password Length</Form.Label>
+                <Form.Control
+                  type="number"
+                  placeholder="Enter Password Length"
+                  value={passLen}
+                  onChange={(e) => setPassLen(Math.abs(e.target.value))}
+                />
                   {/* Need to create a autometic generate password button and apply that with the setPassword */}
+                <Button onClick={generateHandler} className="btn-sm my-1" variant="dark">Generate</Button>
               </Form.Group>
               <Form.Group controlId="isAdmin" className="my-2">
                 <Form.Label>Set Admin</Form.Label>
