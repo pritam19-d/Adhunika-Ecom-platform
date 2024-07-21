@@ -53,7 +53,7 @@ const UserEditScreen = () => {
     <>
       <Link to="/admin/userlist" className="btn btn-light my-3">Go back</Link>
       <FormContainer>
-        <h1>Edit Product</h1>
+        <h1>Edit User</h1>
         {loadingUpdate && <Loader />}
         {isLoading ? <Loader /> :
           error ? <Message variant="danger">{error}</Message> : (
