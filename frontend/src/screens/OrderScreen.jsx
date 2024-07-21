@@ -171,7 +171,6 @@ const OrderScreen = () => {
                         )}
                       </ListGroup.Item>
                     )}
-                    {/* MARK AS DELIVERED PLACEHOLDER */}
                     {loadingDeliver && <Loader />}
                     {userInfo && userInfo.isAdmin && order.isPaid && !order.isDelivered && (
                       <ListGroup.Item>

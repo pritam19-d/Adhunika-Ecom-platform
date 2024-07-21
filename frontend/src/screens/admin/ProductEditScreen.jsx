@@ -84,7 +84,7 @@ const ProductEditScreen = () => {
                 type="number"
                 placeholder="Enter Product Price"
                 value={price}
-                onChange={(e)=>setPrice(e.target.value)}
+                onChange={(e)=>setPrice(Math.abs(e.target.value))}
               />
             </Form.Group>
             <Form.Group controlId="image" className="my-3">
@@ -116,7 +116,7 @@ const ProductEditScreen = () => {
                 type="number"
                 placeholder="Enter Product Stock Count"
                 value={countInStock}
-                onChange={(e)=>setStockCount(e.target.value)}
+                onChange={(e)=>setStockCount(Math.abs(e.target.value))}
               />
             </Form.Group>
             <Form.Group controlId="description" className="my-3">

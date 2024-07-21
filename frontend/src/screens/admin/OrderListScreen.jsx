@@ -14,7 +14,7 @@ const OrderListScreen = () => {
       <h1>Orders</h1>
       {isLoading ? <Loader /> :
         error ? (<Message variant="danger">{error.message}</Message>) :
-          (<Table striped bordered hover responsive className="table-sm">
+          (<Table striped hover responsive className="table-sm">
             <thead>
               <tr>
                 <th>ID</th>
@@ -44,7 +44,7 @@ const OrderListScreen = () => {
                   </td>
                   <td>
                     <LinkContainer to={`/order/${order._id}`}>
-                      <Button variant="dark" className="btn btn-secondary btn-sm">Details</Button>
+                      <Button variant="outline-info" className="btn btn-sm">Details</Button>
                     </LinkContainer>
                   </td>
                 </tr>

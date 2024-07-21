@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { toast } from "react-toastify"
 import Message from "../components/Message"
 import Loader from "../components/Loader"
-import { FaTimes } from "react-icons/fa"
+import { FaTimes, FaEye, FaEyeSlash } from "react-icons/fa"
 import { useProfileMutation } from "../slicers/usersApiSlice"
 import { setCredentials } from "../slicers/authSlice"
 import { useGetMyOrdersQuery } from "../slicers/orderApiSlices"
@@ -16,6 +16,7 @@ const ProfileScreen = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
+  const [showPassword, setShowPassword] = useState(false);
 
   const dispatch = useDispatch()
 
@@ -72,12 +73,26 @@ const ProfileScreen = () => {
           </Form.Group>
           <Form.Group controlId="password" className="my-2">
             <Form.Label>Password</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Enter your Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            ></Form.Control>
+            <div style={{ position: "relative" }}>
+              <Form.Control
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <span
+                onClick={()=>setShowPassword(!showPassword)}
+                style={{
+                  position: "absolute",
+                  right: "10px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center"
+                }}
+              >{showPassword ? <FaEyeSlash /> : <FaEye />}</span>
+            </div>
           </Form.Group>
           <Form.Group controlId="confirmPassword" className="my-2">
             <Form.Label>Confirm Password</Form.Label>

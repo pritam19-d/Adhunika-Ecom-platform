@@ -2,6 +2,7 @@ import React from 'react'
 import { useState, useEffect } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import { Form, Button } from "react-bootstrap"
+import { FaCopy, FaCheck } from "react-icons/fa"
 import Message from "../../components/Message"
 import Loader from "../../components/Loader"
 import FormContainer from "../../components/FormContainer"
@@ -16,6 +17,7 @@ const UserEditScreen = () => {
   const [password, setPassword] = useState("")
   const [isAdmin, setIsAdmin] = useState(false)
   const [passLen, setPassLen] = useState(10)
+  const [isCopied, setIsCopied] = useState(false)
 
   const { data: user, isLoading, refetch, error } = useGetUserDetailQuery(userId)
   const [updateUser, { isLoading: loadingUpdate }] = useUpdateUserMutation()
@@ -40,13 +42,25 @@ const UserEditScreen = () => {
       toast.error(err?.data?.message || err.error);
     }
   };
-  const generateHandler = ()=>{
+  const generateHandler = () => {
     const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-';
     let generatedPassword = ""
     for (let i = 1, n = charset.length; i <= passLen; ++i) {
       generatedPassword += charset.charAt(Math.floor(Math.random() * n));
     }
     setPassword(generatedPassword)
+  }
+  const copyHandler = ()=>{
+    try {
+      navigator.clipboard.writeText(password)
+      toast.success("Passowrd Copied to Clipboard Successfully")
+      setIsCopied(true)
+    } catch (err) {
+      toast.error("Failed to copy the text")
+    }
+    setTimeout(() => {
+      setIsCopied(false)
+    }, 6000);
   }
 
   return (
@@ -74,25 +88,54 @@ const UserEditScreen = () => {
                   placeholder="Enter New Email ID"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  />
+                />
               </Form.Group>
               <Form.Group controlId="password" className="my-2">
                 <Form.Label>Password</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter New Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
+                <div style={{ position: "relative" }}>
+                  <Form.Control
+                    type="text"
+                    placeholder="Click on Generate Button to Generate a New Passowrd & Update"
+                    value={password}
+                    readOnly
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <span
+                    onClick={copyHandler}
+                    style={{
+                      position: "absolute",
+                      right: "10px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      pointerEvents: isCopied ? "none": "auto"
+                    }}
+                  >{isCopied ? <FaCheck /> : <FaCopy />}</span>
+                </div>
                 <Form.Label>Set Password Length</Form.Label>
-                <Form.Control
-                  type="number"
-                  placeholder="Enter Password Length"
-                  value={passLen}
-                  onChange={(e) => setPassLen(Math.abs(e.target.value))}
-                />
-                  {/* Need to create a autometic generate password button and apply that with the setPassword */}
-                <Button onClick={generateHandler} className="btn-sm my-1" variant="dark">Generate</Button>
+                <div style={{ position: "relative" }}>
+                  <Form.Control
+                    type="number"
+                    placeholder="Enter Password Length"
+                    value={passLen}
+                    onChange={(e) => setPassLen(Math.abs(e.target.value))}
+                  />
+                  <Button
+                    onClick={generateHandler}
+                    className="btn-sm btn-outline-success"
+                    variant="btn-outline"
+                    style={{
+                      position: "absolute",
+                      right: "6%",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center"
+                    }}>Generate</Button>
+                </div>
               </Form.Group>
               <Form.Group controlId="isAdmin" className="my-2">
                 <Form.Label>Set Admin</Form.Label>
@@ -100,7 +143,7 @@ const UserEditScreen = () => {
                   type="checkbox"
                   label="Is Admin?"
                   checked={isAdmin}
-                  onChange={ e => setIsAdmin(e.target.checked) }
+                  onChange={e => setIsAdmin(e.target.checked)}
                 />
               </Form.Group>
               <Button
