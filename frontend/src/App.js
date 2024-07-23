@@ -11,7 +11,7 @@ function App() {
   return (
     <div >
       <Header />
-      <Message>This is a beta version of the main product. I'm stil working on it. End product will be deployed soon.</Message>{/*Will be remove the line once fully developed.*/}
+      <Message>This is a beta version of the main product. I'm still working on it. End product will be deployed soon.</Message>{/*Will be remove the line once fully developed.*/}
       <main className="py-3">
         <Container>
           <Outlet />

@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useEffect } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import { Form, Button } from "react-bootstrap"
-import { FaCopy, FaCheck } from "react-icons/fa"
+import { FaCopy, FaCheck, FaBroom } from "react-icons/fa"
 import Message from "../../components/Message"
 import Loader from "../../components/Loader"
 import FormContainer from "../../components/FormContainer"
@@ -14,6 +14,7 @@ const UserEditScreen = () => {
 
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
+  const [mobileNo, setMobileNo] = useState("")
   const [password, setPassword] = useState("")
   const [isAdmin, setIsAdmin] = useState(false)
   const [passLen, setPassLen] = useState(10)
@@ -27,19 +28,24 @@ const UserEditScreen = () => {
     if (user) {
       setName(user.name)
       setEmail(user.email)
+      setMobileNo(user.mobileNo)
       setIsAdmin(user.isAdmin)
     }
   }, [user])
 
   const submitHandler = async (e) => {
     e.preventDefault()
-    try {
-      await updateUser({ userId, name, email, password, isAdmin }).unwrap();
-      toast.success('User Details Updated Successfully.');
-      refetch();
-      navigate('/admin/userlist');
-    } catch (err) {
-      toast.error(err?.data?.message || err.error);
+    if (mobileNo.length < 10) {
+      toast.warning("Please re-check your mobile number")
+    } else {
+      try {
+        await updateUser({ userId, name, email, mobileNo, password, isAdmin }).unwrap();
+        toast.success('User Details Updated Successfully.');
+        refetch();
+        navigate('/admin/userlist');
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
+      }
     }
   };
   const generateHandler = () => {
@@ -50,7 +56,7 @@ const UserEditScreen = () => {
     }
     setPassword(generatedPassword)
   }
-  const copyHandler = ()=>{
+  const copyHandler = () => {
     try {
       navigator.clipboard.writeText(password)
       toast.success("Passowrd Copied to Clipboard Successfully")
@@ -89,6 +95,18 @@ const UserEditScreen = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
+                <Form.Group controlId="mobileNo" className="my-3">
+                  <Form.Label>Mobile number</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="1234567890"
+                    value={mobileNo}
+                    onChange={(e) => {
+                      e.target.value.length > 10 ? toast.warn("Mobile number should be 10 digits long") :
+                        setMobileNo(e.target.value)
+                    }}
+                  />
+                </Form.Group>
               </Form.Group>
               <Form.Group controlId="password" className="my-2">
                 <Form.Label>Password</Form.Label>
@@ -100,6 +118,18 @@ const UserEditScreen = () => {
                     readOnly
                     onChange={(e) => setPassword(e.target.value)}
                   />
+                  <FaBroom
+                    onClick={() => setPassword("")}
+                    style={{
+                      position: "absolute",
+                      right: "8%",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  />
                   <span
                     onClick={copyHandler}
                     style={{
@@ -110,7 +140,7 @@ const UserEditScreen = () => {
                       cursor: "pointer",
                       display: "flex",
                       alignItems: "center",
-                      pointerEvents: isCopied ? "none": "auto"
+                      pointerEvents: isCopied ? "none" : "auto"
                     }}
                   >{isCopied ? <FaCheck /> : <FaCopy />}</span>
                 </div>
@@ -120,7 +150,11 @@ const UserEditScreen = () => {
                     type="number"
                     placeholder="Enter Password Length"
                     value={passLen}
-                    onChange={(e) => setPassLen(Math.abs(e.target.value))}
+                    onChange={(e) => {
+                      e.target.value <= 5 ? toast.warn("Password should not be less than 6 characters.") :
+                        e.target.value > 25 ? toast.warn("Password should not be more than 25 characters.") :
+                          setPassLen(Math.abs(e.target.value))
+                    }}
                   />
                   <Button
                     onClick={generateHandler}

@@ -14,6 +14,7 @@ import { useGetMyOrdersQuery } from "../slicers/orderApiSlices"
 const ProfileScreen = () => {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
+  const [mobileNo, setMobileNo] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false);
@@ -30,6 +31,7 @@ const ProfileScreen = () => {
     if (userInfo) {
       setName(userInfo.name)
       setEmail(userInfo.email)
+      setMobileNo(userInfo.mobileNo)
     }
   }, [userInfo, userInfo.name, userInfo.email])
 
@@ -37,9 +39,13 @@ const ProfileScreen = () => {
     e.preventDefault()
     if (password !== confirmPassword) {
       toast.error("Retype the Password correctly")
+    } else if (password.length < 6){
+      toast.error("Your password must contains atleast 6 characters")
+    } else if (mobileNo.length < 10){
+      toast.warning("Please re-check your mobile number")
     } else {
       try {
-        const res = await updateProfile({ _id: userInfo._id, name, email, password }).unwrap()
+        const res = await updateProfile({ _id: userInfo._id, name, email, mobileNo, password }).unwrap()
         dispatch(setCredentials(res))
         toast.success("Profile Updated Successfully")
       } catch (err) {
@@ -71,6 +77,19 @@ const ProfileScreen = () => {
               onChange={(e) => setEmail(e.target.value)}
             ></Form.Control>
           </Form.Group>
+          <Form.Group controlId="mobileNo" className="my-3">
+            <Form.Label>Mobile number</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="1234567890"
+              value={mobileNo}
+              onChange={(e) => {
+                e.target.value.length > 10 ? toast.warn("Mobile number should be 10 characters") :
+                setMobileNo(e.target.value)
+              }}
+              required
+            />
+          </Form.Group>
           <Form.Group controlId="password" className="my-2">
             <Form.Label>Password</Form.Label>
             <div style={{ position: "relative" }}>
@@ -78,7 +97,9 @@ const ProfileScreen = () => {
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  e.target.value.length > 25 ? toast.info("Password should not be more than 25 characters") :
+                  setPassword(e.target.value)}}
               />
               <span
                 onClick={()=>setShowPassword(!showPassword)}

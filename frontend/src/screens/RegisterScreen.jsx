@@ -13,6 +13,7 @@ import { toast } from "react-toastify"
 const RegisterScreen = () => {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
+  const [mobileNo, setMobileNo] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false);
@@ -35,13 +36,16 @@ const RegisterScreen = () => {
   }, [userInfo, redirect, navigate])
 
   const submitHandler = async (e) => {
-
     e.preventDefault()
     if (password !== confirmPassword) {
       toast.error("Please retype the 'Confirm Password' correctly")
+    } else if (password.length < 6){
+      toast.error("Your password must contains atleast 6 characters")
+    } else if (mobileNo.length < 10){
+      toast.warning("Please re-check your mobile number")
     } else {
       try {
-        const res = await register({ name, email, password }).unwrap()
+        const res = await register({ name, email, mobileNo, password }).unwrap()
         dispatch(setCredentials({ ...res }))
         navigate(redirect)
       } catch (err) {
@@ -49,9 +53,6 @@ const RegisterScreen = () => {
       }
     }
   }
-  const toggleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
 
   return (
     <Card>
@@ -59,34 +60,53 @@ const RegisterScreen = () => {
         <h1>Sign Up</h1>
         <Form onSubmit={submitHandler}>
           <Form.Group controlId="name" className="my-3">
-            <Form.Label>Enter Your Full Name</Form.Label>
+            <Form.Label>Full Name*</Form.Label>
             <Form.Control
               type="name"
-              placeholder="Your name"
+              placeholder="Sourav Ganguli"
               value={name}
+              required
               onChange={(e) => setName(e.target.value)}
             ></Form.Control>
           </Form.Group>
           <Form.Group controlId="email" className="my-3">
-            <Form.Label>Enter Your Email Address</Form.Label>
+            <Form.Label>Email Address*</Form.Label>
             <Form.Control
               type="email"
               placeholder="example@email.com"
               value={email}
+              required
               onChange={(e) => setEmail(e.target.value)}
             ></Form.Control>
           </Form.Group>
+          <Form.Group controlId="mobileNo" className="my-3">
+            <Form.Label>Mobile number*</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="1234567890"
+              value={mobileNo}
+              required
+              onChange={(e) => {
+                e.target.value.length > 10 ? toast.warn("Mobile number should be 10 characters") :
+                setMobileNo(e.target.value)
+              }}
+            />
+          </Form.Group>
           <Form.Group controlId="password" className="my-3">
-            <Form.Label>Enter Password</Form.Label>
+            <Form.Label>Enter Password*</Form.Label>
             <div style={{ position: "relative" }}>
               <Form.Control
                 type={showPassword ? "text" : "password"}
-                placeholder="Enter password"
+                placeholder="Set password within 6 to 25 characters."
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                required
+                onChange={(e) => {
+                  e.target.value.length > 25 ? toast.warn("Password should not be more than 25 characters") :
+                  setPassword(e.target.value)
+                }}
               />
               <span
-                onClick={toggleShowPassword}
+                onClick={() => setShowPassword(!showPassword)}
                 style={{
                   position: "absolute",
                   right: "10px",
@@ -100,11 +120,12 @@ const RegisterScreen = () => {
             </div>
           </Form.Group>
           <Form.Group controlId="confirmpassword" className="my-3">
-            <Form.Label>Retype Your Password</Form.Label>
+            <Form.Label>Confirm password*</Form.Label>
             <Form.Control
               type="password"
-              placeholder="Confirm password"
+              placeholder="Retype Your Password"
               value={confirmPassword}
+              required
               onChange={(e) => setConfirmPassword(e.target.value)}
             ></Form.Control>
           </Form.Group>
