@@ -33,6 +33,7 @@ const UserListScreen = () => {
                 <th>ID</th>
                 <th>Name</th>
                 <th>Email</th>
+                <th>Mobile No.</th>
                 <th>Admin</th>
                 <th></th>
               </tr>
@@ -42,7 +43,8 @@ const UserListScreen = () => {
                 <tr key={user._id}>
                   <td>{user._id}</td>
                   <td>{user.name}</td>
-                  <td><a href={`mailto:${user.email}`}>{user.email}</a></td>
+                  <td><a href={`mailto:${user.email}`} style={{textDecoration: "none"}}>{user.email}</a></td>
+                  <td><a href={`tel:+91${user.mobileNo}`} style={{textDecoration: "none"}}>+91 {user.mobileNo.substring(0, 5)} {user.mobileNo.substring(5, 10)}</a></td>
                   <td>
                     {user.isAdmin ? (
                        <FaCheck style={{ color: "green" }} />

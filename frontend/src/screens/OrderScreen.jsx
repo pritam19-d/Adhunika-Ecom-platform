@@ -41,9 +41,9 @@ const OrderScreen = () => {
   }, [order, paypal, paypalDispatch, loadingPayPal, errorPayPal])
 
   function onApprove(data, actions) {
-    return actions.order.capture().then( async function (details) {
+    return actions.order.capture().then(async function (details) {
       try {
-        await payOrder({orderId, details})
+        await payOrder({ orderId, details })
         refetch();
         toast.success("Payment Successful!")
       } catch (err) {
@@ -61,19 +61,21 @@ const OrderScreen = () => {
   }
   function createOrder(data, actions) {
     return actions.order.create({
-      purchase_units:[
-        {amount:{
-          value: order.totalPrice
-        }}
+      purchase_units: [
+        {
+          amount: {
+            value: order.totalPrice
+          }
+        }
       ]
-    }).then((orderId)=>{
+    }).then((orderId) => {
       return orderId
     })
   }
-  
-  const deliverOrderHandler = async ()=>{
+
+  const deliverOrderHandler = async () => {
     try {
-      await deliverOrder (orderId).unwrap()
+      await deliverOrder(orderId).unwrap()
       refetch()
       toast.success("Order Delivered")
     } catch (err) {
@@ -156,18 +158,18 @@ const OrderScreen = () => {
                         <Col>₹{order.totalPrice}</Col>
                       </Row>
                     </ListGroup.Item>
-                    {!order.isPaid && order.paymentMethod !== "COD" &&(
+                    {!order.isPaid && order.paymentMethod !== "COD" && (
                       <ListGroup.Item>
                         {loadingPay && <Loader />}
                         {isPending ? <Loader /> : (
-                            /* <Button onClick={onApproveTest} style={{ marginBottom: "10px" }} variant="dark">
-                              Test Pay Order
-                            </Button> */
-                              <PayPalButtons
-                                createOrder={createOrder}
-                                onApprove={onApprove}
-                                onError={onError}
-                              ></PayPalButtons>
+                          /* <Button onClick={onApproveTest} style={{ marginBottom: "10px" }} variant="dark">
+                            Test Pay Order
+                          </Button> */
+                          <PayPalButtons
+                            createOrder={createOrder}
+                            onApprove={onApprove}
+                            onError={onError}
+                          ></PayPalButtons>
                         )}
                       </ListGroup.Item>
                     )}
