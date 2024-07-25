@@ -96,7 +96,7 @@ const UserEditScreen = () => {
                   onChange={(e) => setEmail(e.target.value)}
                 />
                 <Form.Group controlId="mobileNo" className="my-3">
-                  <Form.Label>Mobile number</Form.Label>
+                  <Form.Label className="my-2">Mobile number</Form.Label>
                   <Form.Control
                     type="text"
                     placeholder="1234567890"
