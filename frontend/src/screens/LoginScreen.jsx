@@ -6,6 +6,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa"
 import { useDispatch, useSelector } from "react-redux"
 import FormContainer from "../components/FormContainer.jsx"
 import Loader from "../components/Loader.jsx"
+import Meta from "../components/Meta.jsx"
 import { useLoginMutation } from "../slicers/usersApiSlice.js"
 import { setCredentials } from "../slicers/authSlice.js"
 import { toast } from "react-toastify"
@@ -48,6 +49,7 @@ const LoginScreen = () => {
 
   return (
     <Card>
+    <Meta title={"Adhunika | Login"}/>
       <FormContainer>
         <h1>Sign In</h1>
         <Form onSubmit={submitHandler}>

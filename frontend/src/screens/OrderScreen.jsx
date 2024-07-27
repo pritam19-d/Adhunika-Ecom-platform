@@ -4,6 +4,7 @@ import { Row, Col, ListGroup, Image, Button, Card } from "react-bootstrap"
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js"
 import Message from "../components/Message"
 import Loader from "../components/Loader"
+import Meta from "../components/Meta.jsx"
 import { toast } from "react-toastify"
 import { useSelector } from "react-redux"
 import { useGetOrderDetailsQuery, usePayOrderMutation, useGetPayPalClientIdQuery, useDeliverOrderMutation } from "../slicers/orderApiSlices"
@@ -88,6 +89,7 @@ const OrderScreen = () => {
       error ? (<Message variant="danger" />) :
         (
           <>
+            <Meta title={"Adhunika | Login"} />
             <h1>Order: {order._id}</h1>
             <Row>
               <Col md={8}>

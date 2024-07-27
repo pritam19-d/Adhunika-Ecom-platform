@@ -4,14 +4,11 @@ import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import './App.css';
-import Message from "./components/Message";
 
 function App() {
   return (
     <div >
       <Header />
-      <Message>This is a beta version of the main product. I'm still working on it. End product will be deployed soon.</Message>{/*Will be remove the line once fully developed.*/}
       <main className="py-3">
         <Container>
           <Outlet />

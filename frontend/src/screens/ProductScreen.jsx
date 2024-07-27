@@ -6,6 +6,7 @@ import Rating from "../components/Rating";
 import { useGetProductDetailsQuery, useCreateReviewMutation } from "../slicers/productApiSlice.js";
 import Loader from "../components/Loader.jsx";
 import Message from "../components/Message.jsx";
+import Meta from "../components/Meta.jsx";
 import { addToCart } from "../slicers/cartSlice.js";
 import { toast } from "react-toastify"
 
@@ -57,6 +58,10 @@ const ProductScreen = () => {
         </Message>
       ) : (
         <>
+        <Meta 
+          title={`Adhunika | ${product.name}`}
+          description={product.description}
+        />
           <Row>
             <Col md={5}>
               <Image src={product.image} alt={product.name} fluid />

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Form, Col, Row, Image, ListGroup, Card, Button } from "react-bootstrap";
 import { FaTrash } from 'react-icons/fa';
 import Message from "../components/Message";
+import Meta from "../components/Meta.jsx";
 import { addToCart, removeFromCart } from "../slicers/cartSlice.js";
 
 const CartScreen = () => {
@@ -13,20 +14,23 @@ const CartScreen = () => {
   const cart = useSelector((state) => state.cart)
   const { cartItems } = cart;
 
-  const addToCartHandler = (product, qty)=>{
-    dispatch(addToCart({...product, qty}))
+  const addToCartHandler = (product, qty) => {
+    dispatch(addToCart({ ...product, qty }))
   }
 
-  const removeFromCartHandler = (id)=>{
+  const removeFromCartHandler = (id) => {
     dispatch(removeFromCart(id))
   }
 
-  const checkoutHandler = ()=>{
+  const checkoutHandler = () => {
     navigate("/login?redirect=/shipping")
   }
-  
+
   return (
     <Row>
+      <Meta
+        title={"Adhunika | Cart"}
+      />
       <Col md={8}>
         <h1 style={{ marginBottom: "20px" }}>Shopping Cart</h1>
         <hr />
@@ -62,10 +66,10 @@ const CartScreen = () => {
                     </Form.Control>
                   </Col>
                   <Col md={2}>
-                    <Button 
-                      type="button" 
+                    <Button
+                      type="button"
                       variant="light"
-                      onClick={()=>removeFromCartHandler(item._id)}
+                      onClick={() => removeFromCartHandler(item._id)}
                     >
                       <FaTrash />
                     </Button>
@@ -80,14 +84,14 @@ const CartScreen = () => {
         <Card>
           <ListGroup variant="flush">
             <ListGroup.Item>
-              <h2>Subtotal of <b>{cartItems.reduce((acc, item)=> acc + item.qty, 0)}</b> item(s).</h2>
-              ₹ {cartItems.reduce((acc, item)=> acc + item.qty * item.price, 0).toFixed(2)}
+              <h2>Subtotal of <b>{cartItems.reduce((acc, item) => acc + item.qty, 0)}</b> item(s).</h2>
+              ₹ {cartItems.reduce((acc, item) => acc + item.qty * item.price, 0).toFixed(2)}
             </ListGroup.Item>
             <ListGroup.Item>
-              <Button 
-                type="button" 
-                className="btn-block btn-dark" 
-                disabled={cartItems.length===0}
+              <Button
+                type="button"
+                className="btn-block btn-dark"
+                disabled={cartItems.length === 0}
                 onClick={checkoutHandler}
               >
                 Proceed To Checkout

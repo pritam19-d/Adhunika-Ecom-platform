@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom"
 import Message from "../../components/Message"
 import Loader from "../../components/Loader"
 import Paginate from "../../components/Paginate"
+import Meta from "../../components/Meta"
 import { toast } from "react-toastify"
 import { useGetProductsQuery, useCreateProductMutation, useDeleteAnyProductMutation } from "../../slicers/productApiSlice"
 
@@ -43,6 +44,7 @@ const ProductListScreen = () => {
 
   return (
     <div>
+      <Meta title={"Admin | Product List | Adhunika"} />
       <Row className="align-items-center">
         <Col>
           <h1>All Products</h1>

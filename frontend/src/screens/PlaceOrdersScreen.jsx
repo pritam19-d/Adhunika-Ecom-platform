@@ -6,6 +6,7 @@ import { toast } from "react-toastify"
 import CheckoutSteps from "../components/CheckoutSteps"
 import Loader from "../components/Loader"
 import Message from "../components/Message"
+import Meta from "../components/Meta.jsx"
 import { useCreateOrderMutation } from "../slicers/orderApiSlices"
 import { clearCartItems } from "../slicers/cartSlice"
 
@@ -44,6 +45,7 @@ const PlaceOrdersScreen = () => {
 
   return (
     <>
+          <Meta title={"Adhunika | Order Checkout"}/>
       <CheckoutSteps step1 step2 step3 step4 />
       <Row>
         <Col md={8}>

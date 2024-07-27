@@ -4,6 +4,7 @@ import { Form, Button } from "react-bootstrap"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import FormContainer from "../components/FormContainer"
+import Meta from "../components/Meta.jsx"
 import { saveShippingAddress } from "../slicers/cartSlice"
 import CheckoutSteps from "../components/CheckoutSteps"
 
@@ -28,6 +29,7 @@ const ShippingScreen = () => {
     
   return (
     <FormContainer>
+          <Meta title={"Adhunika | Shipping"}/>
       <CheckoutSteps step1 step2 />
       <h1>Shipping</h1>
       <hr />

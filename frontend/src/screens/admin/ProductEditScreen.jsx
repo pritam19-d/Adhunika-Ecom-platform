@@ -5,6 +5,7 @@ import { Form, Button } from "react-bootstrap"
 import Message from "../../components/Message"
 import Loader from "../../components/Loader"
 import FormContainer from "../../components/FormContainer"
+import Meta from "../../components/Meta"
 import { toast } from "react-toastify"
 import { useUpdateAnyProductMutation, useGetProductDetailsQuery, useUploadProductImageMutation } from "../../slicers/productApiSlice"
 
@@ -61,6 +62,7 @@ const ProductEditScreen = () => {
 
   return (
     <>
+    <Meta title={`Admin | ${name} | Adhunika`}/>
       <Link to="/admin/productlist" className="btn btn-light my-3">Go back</Link>
       <FormContainer>
         <h1>Edit Product</h1>

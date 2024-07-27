@@ -4,6 +4,7 @@ import { Table, Button } from "react-bootstrap"
 import { FaTimes } from "react-icons/fa"
 import Message from "../../components/Message"
 import Loader from "../../components/Loader"
+import Meta from "../../components/Meta"
 import { useGetOrdersQuery } from "../../slicers/orderApiSlices"
 
 const OrderListScreen = () => {
@@ -11,6 +12,7 @@ const OrderListScreen = () => {
 
   return (
     <>
+        <Meta title={"Adhunika | Admin | Order List"}/>
       <h1>Orders</h1>
       {isLoading ? <Loader /> :
         error ? (<Message variant="danger">{error.message}</Message>) :

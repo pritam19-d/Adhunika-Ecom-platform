@@ -6,6 +6,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa"
 import { useDispatch, useSelector } from "react-redux"
 import FormContainer from "../components/FormContainer.jsx"
 import Loader from "../components/Loader.jsx"
+import Meta from "../components/Meta.jsx"
 import { useRegisterMutation } from "../slicers/usersApiSlice.js"
 import { setCredentials } from "../slicers/authSlice.js"
 import { toast } from "react-toastify"
@@ -56,6 +57,7 @@ const RegisterScreen = () => {
 
   return (
     <Card>
+      <Meta title={"Adhunika | Register"}/>
       <FormContainer>
         <h1>Sign Up</h1>
         <Form onSubmit={submitHandler}>

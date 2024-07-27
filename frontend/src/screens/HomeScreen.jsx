@@ -1,11 +1,10 @@
 import { Row, Col } from 'react-bootstrap'
 import { Link, useParams } from "react-router-dom";
 import Product from "../components/Product"
-import Loader from "../components/Loader.jsx";
 import Message from "../components/Message.jsx";
 import Paginate from "../components/Paginate.jsx";
-import { useGetProductsQuery } from "../slicers/productApiSlice.js";
 import ProductCarousel from "../components/ProductCarousel.jsx";
+import { useGetProductsQuery } from "../slicers/productApiSlice.js";
 
 const HomeScreen = () => {
   const { pageNumber, keyword } = useParams()
@@ -17,7 +16,7 @@ const HomeScreen = () => {
         <Link to="/" className="btn btn-light mb-4">Go Back</Link>
       }
       {isLoading ? (
-        <Loader />
+        <h2>Please Wait...</h2>
       ) : error ? (
       <Message variant = "danger">
         {error?.data?.message || error.error}

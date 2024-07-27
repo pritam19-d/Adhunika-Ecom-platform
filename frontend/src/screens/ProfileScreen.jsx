@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { toast } from "react-toastify"
 import Message from "../components/Message"
 import Loader from "../components/Loader"
+import Meta from "../components/Meta.jsx"
 import { FaTimes, FaEye, FaEyeSlash } from "react-icons/fa"
 import { useProfileMutation } from "../slicers/usersApiSlice"
 import { setCredentials } from "../slicers/authSlice"
@@ -56,6 +57,7 @@ const ProfileScreen = () => {
 
   return (
     <Row>
+          <Meta title={`Adhunika | ${userInfo.name}`}/>
       <Col md={3}>
         <h2>Profile</h2>
         <Form onSubmit={submitHandler}>
