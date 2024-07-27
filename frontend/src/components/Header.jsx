@@ -1,7 +1,7 @@
 import React from 'react'
 import { useNavigate } from "react-router-dom"
 import { Badge, Navbar, Nav, Container, NavDropdown } from 'react-bootstrap'
-import { FaShoppingCart, FaUser } from 'react-icons/fa'
+import { FaShoppingCart, FaUser, FaSignOutAlt } from 'react-icons/fa'
 import { LinkContainer } from 'react-router-bootstrap'
 import { useSelector, useDispatch } from 'react-redux'
 import { useLogoutMutation } from "../slicers/usersApiSlice"
@@ -31,11 +31,11 @@ const Header = () => {
 
   return (
     <header>
-      <Navbar bg="dark" variant="dark" expand="md" collapseOnSelect>
+      <Navbar bg="dark" variant="dark" expand="md" className="p-2 m-0" collapseOnSelect>
         <Container>
-          <LinkContainer to={"/"}>
+          <LinkContainer to="/">
             <Navbar.Brand>
-              <img src={logo} alt="Adhunika Brand" width={"125px"} className="brand" />
+              <img src={logo} alt="Adhunika Brand" width="132px" className="brand navbar-brand" />
             </Navbar.Brand>
           </LinkContainer>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -56,9 +56,9 @@ const Header = () => {
               { userInfo ? (
                 <NavDropdown title={userInfo.name} id="userName">
                   <LinkContainer to="/profile">
-                    <NavDropdown.Item>Profile</NavDropdown.Item>
+                    <NavDropdown.Item><FaUser /> Profile</NavDropdown.Item>
                   </LinkContainer>
-                    <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
+                    <NavDropdown.Item onClick={logoutHandler}><FaSignOutAlt /> Logout</NavDropdown.Item>
                 </NavDropdown>
               ) : (
                 <LinkContainer to="/login">

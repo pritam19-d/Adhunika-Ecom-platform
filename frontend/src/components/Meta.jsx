@@ -13,7 +13,7 @@ const Meta = ({title, description, keywords}) => {
 
 Meta.defaultProps = {
   title: "Adhunika",
-  description: "One stop solution for your favourite fashionware",
+  description: "Adhunika: The one stop fashion shop in Kalna. Now available in Jirat also.",
   keywords: "fashion, buy desses, branded product in best price"
 }
 

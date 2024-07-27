@@ -129,7 +129,12 @@ const RegisterScreen = () => {
               value={confirmPassword}
               required
               onChange={(e) => setConfirmPassword(e.target.value)}
-            ></Form.Control>
+            />
+            <h6
+              hidden={confirmPassword === password  || confirmPassword === ""}
+              variant="danger"
+              style={{color: "red"}}
+            >Your Password isn't matching with entered password</h6>
           </Form.Group>
           <Button type="submit" variant="dark" className="mt-2" disabled={isLoading}>
             Register

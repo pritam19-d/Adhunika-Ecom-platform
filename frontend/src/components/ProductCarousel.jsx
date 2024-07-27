@@ -14,9 +14,12 @@ const ProductCarousel = () => {
         {products.map(product => (
           <Carousel.Item key={product._id}>
             <Link to={`/product/${product._id}`}>
-              <Image src={product.image} alt={product.name} style={{height:"75vh", objectFit: "cover"}} fluid />
+              <div className="d-inline-flex justify-content-between pr-2">
+                <Image src={product.image} alt={product.name} style={{ height: "75vh", objectFit: "cover" }} fluid />
+                <h4 style={{ textAlign: "right", textDecoration: "none" }} className="my-auto d-none d-md-block" >{product.description}</h4>
+              </div>
               <Carousel.Caption className="carousol-caption">
-                <h2>{product.name}, at ₹{product.price}</h2>
+                <h2>{product.name} at only <b>₹{product.price}</b></h2>
               </Carousel.Caption>
             </Link>
           </Carousel.Item>

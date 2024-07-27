@@ -45,7 +45,7 @@ const PlaceOrdersScreen = () => {
 
   return (
     <>
-          <Meta title={"Adhunika | Order Checkout"}/>
+      <Meta title={"Adhunika | Place Order"} />
       <CheckoutSteps step1 step2 step3 step4 />
       <Row>
         <Col md={8}>

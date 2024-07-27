@@ -22,10 +22,6 @@ const CartScreen = () => {
     dispatch(removeFromCart(id))
   }
 
-  const checkoutHandler = () => {
-    navigate("/login?redirect=/shipping")
-  }
-
   return (
     <Row>
       <Meta
@@ -70,9 +66,7 @@ const CartScreen = () => {
                       type="button"
                       variant="light"
                       onClick={() => removeFromCartHandler(item._id)}
-                    >
-                      <FaTrash />
-                    </Button>
+                    ><FaTrash /></Button>
                   </Col>
                 </Row>
               </ListGroup.Item>
@@ -92,10 +86,8 @@ const CartScreen = () => {
                 type="button"
                 className="btn-block btn-dark"
                 disabled={cartItems.length === 0}
-                onClick={checkoutHandler}
-              >
-                Proceed To Checkout
-              </Button>
+                onClick={() => navigate("/login?redirect=/shipping")}
+              >Proceed To Checkout</Button>
             </ListGroup.Item>
           </ListGroup>
         </Card>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Form, Col, Row, Image, ListGroup, Card, Button } from "react-bootstrap";
+import { FaArrowCircleLeft } from "react-icons/fa"
 import { useDispatch, useSelector } from "react-redux";
 import Rating from "../components/Rating";
 import { useGetProductDetailsQuery, useCreateReviewMutation } from "../slicers/productApiSlice.js";
@@ -49,7 +50,7 @@ const ProductScreen = () => {
 
   return (
     <>
-      <Link className="btn btn-light my-3" to="/">Back</Link>
+      <Link className="btn btn-light my-3" to="/"><FaArrowCircleLeft /> Back</Link>
       {isLoading ? (
         <Loader />
       ) : error ? (

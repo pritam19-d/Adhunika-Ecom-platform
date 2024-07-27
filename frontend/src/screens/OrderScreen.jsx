@@ -52,11 +52,11 @@ const OrderScreen = () => {
       }
     })
   }
-  // async function onApproveTest() {
-  //   await payOrder({orderId, details: { payer: {} } }).unwrap()
-  //   refetch();
-  //   toast.success("Payment Successful!")
-  // }
+  async function onApprovePayment() {
+    await payOrder({orderId, details: { payer: {} }}).unwrap()
+    refetch();
+    toast.success("Payment Successful!")
+  }
   function onError(err) {
     toast.error(err.message)
   }
@@ -89,7 +89,7 @@ const OrderScreen = () => {
       error ? (<Message variant="danger" />) :
         (
           <>
-            <Meta title={"Adhunika | Login"} />
+            <Meta title={`Adhunika | Checkout-${order._id}`} />
             <h1>Order: {order._id}</h1>
             <Row>
               <Col md={8}>
@@ -160,13 +160,10 @@ const OrderScreen = () => {
                         <Col>₹{order.totalPrice}</Col>
                       </Row>
                     </ListGroup.Item>
-                    {!order.isPaid && order.paymentMethod !== "COD" && (
+                    {!order.isPaid && order.paymentMethod !== "COD" ? (
                       <ListGroup.Item>
                         {loadingPay && <Loader />}
                         {isPending ? <Loader /> : (
-                          /* <Button onClick={onApproveTest} style={{ marginBottom: "10px" }} variant="dark">
-                            Test Pay Order
-                          </Button> */
                           <PayPalButtons
                             createOrder={createOrder}
                             onApprove={onApprove}
@@ -174,7 +171,11 @@ const OrderScreen = () => {
                           ></PayPalButtons>
                         )}
                       </ListGroup.Item>
-                    )}
+                    ) : userInfo && userInfo.isAdmin && !order.isPaid && !order.isDelivered &&
+                      <Button onClick={onApprovePayment} style={{ marginBottom: "10px" }} variant="dark">
+                        Payment Received
+                      </Button>
+                    }
                     {loadingDeliver && <Loader />}
                     {userInfo && userInfo.isAdmin && order.isPaid && !order.isDelivered && (
                       <ListGroup.Item>
