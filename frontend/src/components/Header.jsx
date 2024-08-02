@@ -6,6 +6,7 @@ import { LinkContainer } from 'react-router-bootstrap'
 import { useSelector, useDispatch } from 'react-redux'
 import { useLogoutMutation } from "../slicers/usersApiSlice"
 import { logout } from "../slicers/authSlice"
+import { toast } from "react-toastify" 
 import logo from '../assetes/Brand.png'
 import SearchBox from "./SearchBox"
 
@@ -23,7 +24,7 @@ const Header = () => {
       await logoutApiCall().unwrap()
       dispatch(logout())
       navigate("/login")
-      console.log("Logged Out Successfully!")
+      toast.success("You have been logged Out successfully!")
     } catch (err) {
       console.log(`logout error=> ${err}`)
     }

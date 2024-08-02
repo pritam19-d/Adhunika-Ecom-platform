@@ -49,9 +49,32 @@ table th {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: #00000080
+}
+
+.carousel-div{
+  background-color: #00eeff09;
+}
+
+.carousel-item {
+  padding-right: "1.5%";
+}
+
+.pagination {
+  justify-content: flex-end;
 }
 
 .brand{
-  background-blend-mode: darken;
+  padding: 0;
+}
+
+.row-category{
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.link-category{
+  text-align: center;
+  width: 100%;
 }

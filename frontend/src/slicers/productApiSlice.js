@@ -62,7 +62,13 @@ export const productApiSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor:5
     }),
+    getCategorisedProduct: builder.query({
+      query : (category) =>({
+        url : `${PRODUCTS_URL}/category/${category}`,
+        method : "GET"
+      })
+    })
   })
 })
 
-export const { useGetProductsQuery, useGetProductDetailsQuery, useCreateProductMutation, useUpdateAnyProductMutation, useUploadProductImageMutation, useDeleteAnyProductMutation, useCreateReviewMutation, useGetTopProductsQuery } = productApiSlice
+export const { useGetProductsQuery, useGetProductDetailsQuery, useCreateProductMutation, useUpdateAnyProductMutation, useUploadProductImageMutation, useDeleteAnyProductMutation, useCreateReviewMutation, useGetTopProductsQuery, useGetCategorisedProductQuery } = productApiSlice

@@ -27,7 +27,7 @@ const ProductEditScreen = () => {
   const submitHandler = async (e)=>{
     e.preventDefault()
     try {
-      await updateAnyProduct({productId, name, price, category, countInStock, description, image}).unwrap(); // NOTE: here we need to unwrap the Promise to catch any rejection in our catch block
+      await updateAnyProduct({productId, name, price, category, countInStock, description, image}).unwrap();
       toast.success('Product updated');
       refetch();
       navigate('/admin/productlist');
@@ -56,7 +56,6 @@ const ProductEditScreen = () => {
       setImage(res.image)
     } catch (err) {
       toast.error(err?.data?.message || err.error)
-      console.log("error", err?.data?.message || err.error);
     }
   }
 
@@ -124,7 +123,8 @@ const ProductEditScreen = () => {
             <Form.Group controlId="description" className="my-3">
               <Form.Label>Product Description</Form.Label>
               <Form.Control
-                type="text"
+                as="textarea" 
+                rows={3}
                 placeholder="Enter Product Description"
                 value={description}
                 onChange={(e)=>setDescription(e.target.value)}
