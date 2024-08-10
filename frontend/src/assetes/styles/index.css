@@ -69,7 +69,6 @@ table th {
 }
 
 .row-category{
-  width: 100%;
   flex-wrap: wrap;
   justify-content: space-between;
 }

@@ -34,7 +34,7 @@ const HomeScreen = () => {
         </Row>
         <Paginate pages={data.pages} page={data.page} keyword={keyword ? keyword : ""} />
         <Row className="row-category">
-          <h3 className="text-center">Category</h3>
+          <h3 className="text-center">Categories</h3>
           <hr />
           {data.products.map((product) => (
             <Col key={product.category} sm={4} md={3} lg={2} xl={2} style={{ textAlign: "center" }}>

@@ -15,7 +15,7 @@ const ProductCarousel = () => {
           <Carousel.Item key={product._id}>
             <Link to={`/product/${product._id}`}>
               <div className="d-inline-flex justify-content-between carousel-div">
-                <Image src={product.image} alt={product.name} style={{ height: "75vh", objectFit: "fill" }} fluid />
+                <Image src={product.image} alt={product.name} style={{ height: "75vh", objectFit: "cover" }} fluid />
                 <h3 style={{ textAlign: "right", margin: "1%", lineHeight: "150%" }} className="my-auto d-none d-md-block" ><b>{product.description}</b></h3>
               </div>
               <Carousel.Caption className="carousol-caption">
