@@ -17,7 +17,7 @@ const LoginScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [login, { isLoading }] = useLoginMutation()
 

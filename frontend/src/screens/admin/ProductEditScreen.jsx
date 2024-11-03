@@ -8,6 +8,7 @@ import FormContainer from "../../components/FormContainer"
 import Meta from "../../components/Meta"
 import { toast } from "react-toastify"
 import { useUpdateAnyProductMutation, useGetProductDetailsQuery, useUploadProductImageMutation } from "../../slicers/productApiSlice"
+import { FaCheck, FaCopy } from "react-icons/fa"
 
 const ProductEditScreen = () => {
   const {id: productId } = useParams()
@@ -18,6 +19,7 @@ const ProductEditScreen = () => {
   const [countInStock, setStockCount] = useState()
   const [description, setDescription] = useState("")
   const [image, setImage] = useState("")
+  const [isCopied, setIsCopied] = useState(false)
 
   const { data: product, isLoading, refetch, error } = useGetProductDetailsQuery(productId)
   const [updateAnyProduct, {isLoading: loadingUpdate}] = useUpdateAnyProductMutation()
@@ -53,10 +55,23 @@ const ProductEditScreen = () => {
     try {
       const res = await uploadProductImage(formData).unwrap()
       toast.success(res.message)
-      setImage(res.image)
+      setImage(res.secure_url)
     } catch (err) {
       toast.error(err?.data?.message || err.error)
     }
+  }
+
+  const copyHandler = () => {
+    try {
+      navigator.clipboard.writeText(image)
+      toast.success("URL Copied to Clipboard Successfully")
+      setIsCopied(true)
+    } catch (err) {
+      toast.error("Failed to copy the text")
+    }
+    setTimeout(() => {
+      setIsCopied(false)
+    }, 6000);
   }
 
   return (
@@ -89,13 +104,29 @@ const ProductEditScreen = () => {
               />
             </Form.Group>
             <Form.Group controlId="image" className="my-3">
-              <Form.Label>Upload Product Image</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter image url"
-                value={image}
-                onChange={(e)=>setImage()}
-              />
+              <Form.Label>Product Image URL</Form.Label>
+              <div style={{ position: "relative" }}>
+                <Form.Control
+                  type="text"
+                  placeholder="Image url"
+                  value={image}
+                  readOnly
+                  onChange={(e)=>setImage()}
+                />
+                <span
+                  onClick={copyHandler}
+                  style={{
+                    position: "absolute",
+                    right: "10px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    pointerEvents: isCopied ? "none" : "auto"
+                  }}
+                >{isCopied ? <FaCheck /> : <FaCopy />}</span>
+              </div>
               <Form.Control
                 type="file"
                 label="Upload File"

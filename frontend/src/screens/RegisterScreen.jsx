@@ -20,7 +20,7 @@ const RegisterScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [register, { isLoading }] = useRegisterMutation()
 

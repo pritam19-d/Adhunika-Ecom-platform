@@ -57,7 +57,6 @@ const registerUser = asyncHandler (async (req, res)=>{
     res.status(400)
     throw new Error("Invald User data")
   }
-  // res.send("Register user.")
 })
 
 //@desc   Logout user /clear cookie
