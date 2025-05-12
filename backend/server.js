@@ -49,4 +49,4 @@ app.use(notFound);
 app.use(errorHandler);
 
 
-app.listen(PORT, ()=>console.log(`Server is runnning on port ${PORT}.`))
+app.listen(PORT, ()=>console.log(`🚀 Server is runnning on port ${PORT}.`.blue.bold.underline))
