@@ -53,7 +53,7 @@ const PlaceOrdersScreen = () => {
 					currency: "INR",
 					name: "Adhunika Online",
 					description: "Test Transaction",
-					image: "https://example.com/your_logo",
+					image: "https://github.com/pritam19-d/Adhunika-Ecom-platform/blob/master/frontend/public/Adhunika.png",
 					order_id: res?.razorpayOrderId,
 					handler: async function (response) {
 						try {
@@ -67,7 +67,7 @@ const PlaceOrdersScreen = () => {
 								dispatch(clearCartItems());
 								navigate(`/order/${res.data._id}`);
 							} else {
-								alert("Payment verification failed.");
+								toast.error("Payment verification failed.");
 							}
 						} catch (err) {
 							console.log("Error>>>>>\n" + { err });
@@ -76,7 +76,7 @@ const PlaceOrdersScreen = () => {
 					method: {
 						netbanking: true,
 						card: true,
-						upi: true, // ✅ Make sure this is true
+						upi: true,
 						wallet: true,
 					},
 					prefill: {
@@ -94,9 +94,6 @@ const PlaceOrdersScreen = () => {
 				const rzp1 = new window.Razorpay(options);
 				rzp1.on("payment.failed", function (response) {
 					console.log(response.error);
-					toast.error(
-						`Payment failed due to\n${response.error.reason}\nPlease try again.`
-					);
           toast.error(`Error: ${response.error.description}`);
 				});
 				rzp1.open();
@@ -112,7 +109,11 @@ const PlaceOrdersScreen = () => {
 		<>
 			<Meta title={"Adhunika | Place Order"} />
 			<CheckoutSteps step1 step2 step3 step4 />
-			<Row>
+			{loadingVerification? 
+      <Col>
+        <Row><Loader /></Row>
+        <Row><h4>Please wait while we verifying your payment</h4></Row>
+      </Col> : (<Row>
 				<Col md={8}>
 					<ListGroup>
 						<ListGroup.Item>
@@ -214,7 +215,7 @@ const PlaceOrdersScreen = () => {
 						</ListGroup>
 					</Card>
 				</Col>
-			</Row>
+			</Row>)}
 		</>
 	);
 };

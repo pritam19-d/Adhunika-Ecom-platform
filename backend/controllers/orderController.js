@@ -1,6 +1,7 @@
 import crypto from "crypto";
 import asyncHandler from "../middleware/asyncHandler.js";
 import Order from "../models/oderModel.js";
+import Product from "../models/productModel.js";
 import razorpay from "../config/razorpay.js";
 import dotenv from "dotenv";
 dotenv.config();
@@ -38,30 +39,51 @@ const addOrderItems = asyncHandler(async (req, res) => {
 			totalPrice,
 		});
 
-		if (paymentMethod === "COD") {
+		try {		
+			await Promise.all(
+				orderItems.map(async (item) => {
+					const product = await Product.findById(item._id);
+					console.log("product", product);
+					if (!product) {
+						res.status(404);
+						throw new Error("Product Not Found.");
+					}
+					if (product.countInStock < item.qty) {
+						res.status(400);
+						throw new Error(`Product '${product.name}' is out of stock.`);
+					}
+				})
+			);
+
 			const createdOrder = await order.save();
-			res.status(201).json({ data: createdOrder });
-		} else if (paymentMethod === "Razorpay") {
-			const options = {
-				amount: parseInt(totalPrice * 100),
-				currency: "INR",
-				receipt: `receipt_order_${Date.now()}`,
-			};
-			try {
+
+			await Promise.all(orderItems.map(async (item) => {
+				const product = await Product.findById(item._id);
+				product.countInStock -= item.qty;
+				await product.save();
+			}))
+
+			if (paymentMethod === "COD") {
+				res.status(201).json({ data: createdOrder });
+			} else if (paymentMethod === "Razorpay") {
+				const options = {
+					amount: parseInt(totalPrice * 100),
+					currency: "INR",
+					receipt: `receipt_order_${Date.now()}`,
+				};
 				const razorpayOrder = await razorpay.orders.create(options);
-				const createdOrder = await order.save();
-				res
-					.status(200)
-					.json({ data: createdOrder, razorpayOrderId: razorpayOrder?.id, key: process.env.RAZORPAY_KEY_ID });
-				// res.status(200).json({razorpayOrderId: razorpayOrder?.id});
-			} catch (err) {
-				res
-					.status(500)
-					.json({
-						success: false,
-						message: err.message || err.error.description,
-					});
+				res.status(200).json({
+					data: createdOrder,
+					razorpayOrderId: razorpayOrder?.id,
+					key: process.env.RAZORPAY_KEY_ID,
+				});
 			}
+		} catch (err) {
+			!res.statusCode && res.status(500);
+			res.json({
+				success: false,
+				message: err.message || err.error.description,
+			});
 		}
 	}
 });
@@ -83,12 +105,10 @@ const veryfyPayment = asyncHandler(async (req, res) => {
 			.digest("hex");
 
 		if (expectedSignature !== razorpay_signature) {
-			return res
-				.status(400)
-				.json({
-					success: false,
-					message: "Invalid signature, payment verification failed",
-				});
+			return res.status(400).json({
+				success: false,
+				message: "Invalid signature, payment verification failed",
+			});
 		} else if (!razorpay_order_id || !orderId) {
 			return res
 				.status(400)
@@ -106,12 +126,10 @@ const veryfyPayment = asyncHandler(async (req, res) => {
 			!paymentResponse.items ||
 			paymentResponse.items.length === 0
 		) {
-			return res
-				.status(404)
-				.json({
-					success: false,
-					message: "No payment found for this Razorpay order",
-				});
+			return res.status(404).json({
+				success: false,
+				message: "No payment found for this Razorpay order",
+			});
 		}
 		const successfulPayment = paymentResponse.items
 			.filter((p) => p.status === "captured")
@@ -132,13 +150,11 @@ const veryfyPayment = asyncHandler(async (req, res) => {
 			email_address: successfulPayment.email || "",
 		};
 		await order.save();
-		return res
-			.status(200)
-			.json({
-				success: true,
-				message: "Payment verified and order payment completed",
-				data: order,
-			});
+		return res.status(200).json({
+			success: true,
+			message: "Payment verified and order payment completed",
+			data: order,
+		});
 	} catch (err) {
 		console.log(err);
 	}
