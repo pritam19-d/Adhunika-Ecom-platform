@@ -39,14 +39,15 @@ const PaymentScreen = () => {
         <Form.Group>
           <Form.Label as="legend">Select method</Form.Label>
           <Col>
-            <Form.Check
+          <Form.Check
               type="radio"
               className="my-2"
-              label="PayPal"
-              id="PayPal"
-              value="PayPal"
-              checked={"PayPal" === paymentMethod}
+              label="Online Payment (UPI, Debit/Credit Card)"
+              id="Razorpay"
+              value="Razorpay"
+              checked={"Razorpay" === paymentMethod}
               onClick={(e) => setPaymentMethod(e.target.value)}
+              disabled={cart.totalPrice - cart.taxPrice > 50000}
             />
             <Form.Check
               type="radio"
@@ -55,16 +56,6 @@ const PaymentScreen = () => {
               id="COD"
               value="COD"
               checked={"COD" === paymentMethod}
-              onClick={(e) => setPaymentMethod(e.target.value)}
-              disabled={cart.totalPrice - cart.taxPrice > 10000}
-            />
-            <Form.Check
-              type="radio"
-              className="my-2"
-              label="Online Payment (UPI, Debit/Credit Card)"
-              id="Razorpay"
-              value="Razorpay"
-              checked={"Razorpay" === paymentMethod}
               onClick={(e) => setPaymentMethod(e.target.value)}
               disabled={cart.totalPrice - cart.taxPrice > 10000}
             />

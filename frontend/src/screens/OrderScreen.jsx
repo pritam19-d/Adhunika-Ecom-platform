@@ -8,6 +8,7 @@ import Meta from "../components/Meta.jsx"
 import { toast } from "react-toastify"
 import { useSelector } from "react-redux"
 import { useGetOrderDetailsQuery, usePayOrderMutation, useGetPayPalClientIdQuery, useDeliverOrderMutation } from "../slicers/orderApiSlices"
+import { dateFormatting } from "../constants.js"
 
 const OrderScreen = () => {
   const { id: orderId } = useParams()
@@ -106,7 +107,7 @@ const OrderScreen = () => {
                       <b>Address: </b>{order.shippingAddress.address}, {order.shippingAddress.city}. Dist- {order.shippingAddress.district}, PIN- {order.shippingAddress.pinCode}
                     </p>
                     <p>{order.isDelivered ?
-                      (<Message variant="success">Delivered on {order.deliveredDate.substring(0, 10)}</Message>) :
+                      (<Message variant="success">Delivered on {dateFormatting(order.deliveredDate)}</Message>) :
                       (<Message variant="danger">Yet to be deliver.</Message>)
                     }
                     </p>
@@ -115,7 +116,7 @@ const OrderScreen = () => {
                     <h2>Payment Method</h2>
                     <p><b>Method: </b>{order.paymentMethod}</p>
                     {order.isPaid ? (
-                      <Message variant="success">Paid on {order.paidAt.substring(0, 10)}</Message>
+                      <Message variant="success">Paid on {dateFormatting(order.paidAt)}</Message>
                     ) : (
                       <Message variant="danger">Payment not received yet</Message>
                     )}

@@ -3,8 +3,6 @@ import asyncHandler from "../middleware/asyncHandler.js";
 import Order from "../models/oderModel.js";
 import Product from "../models/productModel.js";
 import razorpay from "../config/razorpay.js";
-import dotenv from "dotenv";
-dotenv.config();
 
 //@desc   Create a new order
 //@route  POST /api/orders
@@ -39,11 +37,10 @@ const addOrderItems = asyncHandler(async (req, res) => {
 			totalPrice,
 		});
 
-		try {		
+		try {
 			await Promise.all(
 				orderItems.map(async (item) => {
 					const product = await Product.findById(item._id);
-					console.log("product", product);
 					if (!product) {
 						res.status(404);
 						throw new Error("Product Not Found.");
@@ -57,11 +54,13 @@ const addOrderItems = asyncHandler(async (req, res) => {
 
 			const createdOrder = await order.save();
 
-			await Promise.all(orderItems.map(async (item) => {
-				const product = await Product.findById(item._id);
-				product.countInStock -= item.qty;
-				await product.save();
-			}))
+			await Promise.all(
+				orderItems.map(async (item) => {
+					const product = await Product.findById(item._id);
+					product.countInStock -= item.qty;
+					await product.save();
+				})
+			);
 
 			if (paymentMethod === "COD") {
 				res.status(201).json({ data: createdOrder });
@@ -88,7 +87,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
 	}
 });
 
-const veryfyPayment = asyncHandler(async (req, res) => {
+const verifyPayment = asyncHandler(async (req, res) => {
 	try {
 		const {
 			razorpay_order_id,
@@ -119,7 +118,6 @@ const veryfyPayment = asyncHandler(async (req, res) => {
 		const paymentResponse = await razorpay.orders.fetchPayments(
 			razorpay_order_id
 		);
-		// console.log("razorpay order created", razorpayOrder, "\nRazorpay payment details", paymentResponse);
 
 		if (
 			!paymentResponse ||
@@ -156,7 +154,11 @@ const veryfyPayment = asyncHandler(async (req, res) => {
 			data: order,
 		});
 	} catch (err) {
-		console.log(err);
+		!res.statusCode && res.status(500);
+		res.json({
+			success: false,
+			message: err.message || err.error.description,
+		});
 	}
 });
 
@@ -241,7 +243,7 @@ const getOrders = asyncHandler(async (req, res) => {
 
 export {
 	addOrderItems,
-	veryfyPayment,
+	verifyPayment,
 	getMyOrders,
 	getOrderById,
 	updateOrderToPaid,
