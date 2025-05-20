@@ -11,6 +11,7 @@ import { FaTimes, FaEye, FaEyeSlash } from "react-icons/fa"
 import { useProfileMutation } from "../slicers/usersApiSlice"
 import { setCredentials } from "../slicers/authSlice"
 import { useGetMyOrdersQuery } from "../slicers/orderApiSlices"
+import { dateFormatting } from "../constants.js"
 
 const ProfileScreen = () => {
   const [name, setName] = useState("")
@@ -154,16 +155,16 @@ const ProfileScreen = () => {
                 {orders.map(order => (
                   <tr key={order._id}>
                     <td>{order._id}</td>
-                    <td>{order.createdAt.substring(0, 10)}</td>
+                    <td>{dateFormatting(order.createdAt).substring(0, 10)}</td>
                     <td>{order.totalPrice}</td>
                     <td>
                       {order.isPaid ? (
-                        order.paidAt.substring(0, 10)
+                        dateFormatting(order.paidAt).substring(0, 10)
                       ) : <FaTimes style={{ color: "red" }} />}
                     </td>
                     <td>
                       {order.isDelivered ? (
-                          order.deliveredDate.substring(0, 10)
+                          dateFormatting(order.deliveredDate).substring(0, 10)
                       ) : <FaTimes style={{ color: "red" }} />}
                     </td>
                     <td>

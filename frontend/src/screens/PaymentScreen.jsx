@@ -9,7 +9,7 @@ import Meta from "../components/Meta.jsx"
 import { savePaymentMethod } from "../slicers/cartSlice"
 
 const PaymentScreen = () => {
-  const [paymentMethod, setPaymentMethod] = useState("PayPal")
+  const [paymentMethod, setPaymentMethod] = useState("Razorpay")
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -39,14 +39,15 @@ const PaymentScreen = () => {
         <Form.Group>
           <Form.Label as="legend">Select method</Form.Label>
           <Col>
-            <Form.Check
+          <Form.Check
               type="radio"
               className="my-2"
-              label="PayPal"
-              id="PayPal"
-              value="PayPal"
-              checked={"PayPal" === paymentMethod}
+              label="Online Payment (UPI, Debit/Credit Card)"
+              id="Razorpay"
+              value="Razorpay"
+              checked={"Razorpay" === paymentMethod}
               onClick={(e) => setPaymentMethod(e.target.value)}
+              disabled={cart.totalPrice - cart.taxPrice > 50000}
             />
             <Form.Check
               type="radio"

@@ -21,7 +21,6 @@ app.use(express.urlencoded({extended: true}))
 //Cookie parser middleware
 app.use(cookieParser())
 
-
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
@@ -49,4 +48,4 @@ app.use(notFound);
 app.use(errorHandler);
 
 
-app.listen(PORT, ()=>console.log(`Server is runnning on port ${PORT}.`))
+app.listen(PORT, ()=>console.log(`🚀 Server is runnning on port ${PORT}.`.blue.bold.underline))
