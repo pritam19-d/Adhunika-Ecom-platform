@@ -6,7 +6,7 @@ export const updateCart = (state) => {
   //Calculate item price
   state.itemsPrice = addDecimals(state.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0))
   //Calculate shipping price (if applicable)
-  state.shippingPrice = addDecimals(state.itemsPrice >= 500 ? 0 : 80)
+  state.shippingPrice = addDecimals(state.itemsPrice >= 500 || state.itemsPrice <= 2 ? 0 : 80)
   //Calculate tax price (19% gst)
   state.taxPrice = addDecimals(Number((0.19 * state.itemsPrice).toFixed(2)))
   //Calculate total price
