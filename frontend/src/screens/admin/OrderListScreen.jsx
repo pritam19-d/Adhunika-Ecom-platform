@@ -20,6 +20,7 @@ const OrderListScreen = () => {
           (<Table striped hover responsive className="table-sm">
             <thead>
               <tr>
+                <th>Sl no.</th>
                 <th>ID</th>
                 <th>User</th>
                 <th>Date</th>
@@ -29,8 +30,9 @@ const OrderListScreen = () => {
               </tr>
             </thead>
             <tbody>
-              {orders.map((order) => (
+              {orders.map((order, index) => (
                 <tr key={order._id}>
+                  <td>{++index}.</td>
                   <td>{order._id}</td>
                   <td>{order.user && order.user.name}</td>
                   <td>{dateFormatting(order.createdAt).substring(0,10)}</td>

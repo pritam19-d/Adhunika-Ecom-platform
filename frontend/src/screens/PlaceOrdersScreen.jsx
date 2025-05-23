@@ -44,8 +44,8 @@ const PlaceOrdersScreen = () => {
 			}).unwrap();
 
 			if (cart.paymentMethod === "COD") {
-				dispatch(clearCartItems());
 				navigate(`/order/${res.data._id}`);
+				dispatch(clearCartItems());
 			} else if (cart.paymentMethod === "Razorpay") {
 				const options = {
 					key: res.key, // the Razorpay Key ID
