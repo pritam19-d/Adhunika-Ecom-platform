@@ -87,6 +87,9 @@ const addOrderItems = asyncHandler(async (req, res) => {
 	}
 });
 
+//@desc   Verify Razorpay payment and update order status
+//@route  POST /api/orders/verify-payment
+//@access Private
 const verifyPayment = asyncHandler(async (req, res) => {
 	try {
 		const {
@@ -115,9 +118,7 @@ const verifyPayment = asyncHandler(async (req, res) => {
 		}
 
 		const order = await Order.findById(orderId);
-		const paymentResponse = await razorpay.orders.fetchPayments(
-			razorpay_order_id
-		);
+		const paymentResponse = await razorpay.orders.fetchPayments(razorpay_order_id);
 
 		if (
 			!paymentResponse ||

@@ -98,13 +98,13 @@ const OrderScreen = () => {
                   <ListGroup.Item>
                     <h2>Shipping</h2>
                     <p>
-                      <b>Name: </b>{order.user.name}
+                      <b>Name: </b>{order?.user?.name}
                     </p>
                     <p>
-                      <b>Email: </b>{order.user.email}
+                      <b>Email: </b>{order?.user.email}
                     </p>
                     <p>
-                      <b>Address: </b>{order.shippingAddress.address}, {order.shippingAddress.city}. Dist- {order.shippingAddress.district}, PIN- {order.shippingAddress.pinCode}
+                      <b>Address: </b>{order.shippingAddress.address}, {order.shippingAddress.city}, {order.shippingAddress.district}, {order.shippingAddress.state}, PIN- {order.shippingAddress.pinCode}
                     </p>
                     <p>{order.isDelivered ?
                       (<Message variant="success">Delivered on {dateFormatting(order.deliveredDate)}</Message>) :

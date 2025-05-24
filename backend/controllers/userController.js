@@ -17,7 +17,8 @@ const authUser = asyncHandler (async (req, res)=>{
       email: user.email,
       mobileNo: user.mobileNo,
       name: user.name,
-      isAdmin: user.isAdmin
+      isAdmin: user.isAdmin,
+      loggedInTime: new Date().toISOString()
     })
   } else {
     res.status(401)
@@ -51,7 +52,8 @@ const registerUser = asyncHandler (async (req, res)=>{
       name: user.name,
       email: user.email,
       mobileNo: user.mobileNo,
-      isAdmin: user.isAdmin
+      isAdmin: user.isAdmin,
+      loggedInTime: new Date().toISOString()
     })
   } else {
     res.status(400)

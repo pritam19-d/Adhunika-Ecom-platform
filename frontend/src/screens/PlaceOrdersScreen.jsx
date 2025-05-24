@@ -52,7 +52,7 @@ const PlaceOrdersScreen = () => {
 					amount: res.data.totalPrice, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
 					currency: "INR",
 					name: "Adhunika Online",
-					description: "Test Transaction",
+					description: `Transaction for Order ID: ${res?.data?._id}`,
 					image: "https://github.com/pritam19-d/Adhunika-Ecom-platform/blob/master/frontend/public/Adhunika.png",
 					order_id: res?.razorpayOrderId,
 					handler: async function (response) {
@@ -85,7 +85,8 @@ const PlaceOrdersScreen = () => {
 						contact: userInfo.mobileNo,
 					},
 					notes: {
-						address: "Razorpay Corporate Office",
+						address: Object.values(cart.shippingAddress).join(', '),
+						merchant_order_id: res?.data?._id,
 					},
 					theme: {
 						color: "#7b8a8b",
