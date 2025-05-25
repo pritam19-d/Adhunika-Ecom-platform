@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react'
+import React from 'react'
 import { useNavigate } from "react-router-dom"
 import { Badge, Navbar, Nav, Container, NavDropdown } from 'react-bootstrap'
 import { FaShoppingCart, FaUser, FaSignOutAlt } from 'react-icons/fa'
@@ -19,7 +19,7 @@ const Header = () => {
   
   const [logoutApiCall] = useLogoutMutation()
   
-  const logoutHandler = useCallback(async()=>{
+  const logoutHandler = async()=>{
     try {
       await logoutApiCall().unwrap()
       dispatch(logout())
@@ -28,11 +28,7 @@ const Header = () => {
     } catch (err) {
       console.log(`logout error=> ${err}`)
     }
-  }, [logoutApiCall, dispatch, navigate]);
-
-  useEffect(() => {
-    userInfo && (new Date(userInfo.loggedInTime).getTime() + 24 * 60 * 60 * 1000) < new Date().getTime() && logoutHandler();
-  }, [userInfo, logoutHandler]);
+  }
 
   return (
     <header>

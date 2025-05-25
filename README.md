@@ -19,7 +19,7 @@ An Ecommerce platform for Adhunika Shop in Kalna
 - Admin Order details page
 - Mark orders as delivered option
 - Checkout process (shipping, payment method, etc)
-- PayPal / credit card integration
+- Razorpay / credit card integration
 - Cash On Delivery to place an order without paying
 - Database seeder (products & users)
 
