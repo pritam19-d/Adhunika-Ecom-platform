@@ -137,7 +137,7 @@ const ForgotPassword = () => {
 							<b>Verify</b>
 						</Button>
 					)}
-					{isLoading && <Loader />}
+					{(isLoading || sendingOtp) && <Loader />}
 				</Form>
 				<Row className="py-3">
 					<Col>

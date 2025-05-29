@@ -115,7 +115,7 @@ const RegisterScreen = () => {
                 transform: "translateY(-50%)",
               }}>
                 {isverified ? <FaCheck /> : 
-                  sendingOtp ? <div class="spinner-border" role="status" /> :
+                  sendingOtp ? <div className="spinner-border" role="status" /> :
                   <button 
                     className="btn btn-outline-dark border-0 btn-sm"
                     onClick={ async () => {
