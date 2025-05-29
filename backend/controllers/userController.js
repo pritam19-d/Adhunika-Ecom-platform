@@ -206,7 +206,6 @@ const updateUserProfile = asyncHandler (async (req, res)=>{
     if(req.body.password){
       user.password = req.body.password
     }
-    console.log((user.email !== bodyEmail && (req.app.locals.otpStore[bodyEmail] !== "verified" || !req.app.locals.otpStore[bodyEmail])), bodyEmail, user.email);
     
     const updateUser = await user.save()
     delete req.app.locals.otpStore[bodyEmail];
