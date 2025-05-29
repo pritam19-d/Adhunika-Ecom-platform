@@ -1,6 +1,75 @@
+import { sendNewPasswordEmail, sendOTPEmail } from "../config/nodemailer.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 import User from "../models/userModel.js";
 import generateToken from "../utils/generateToken.js";
+
+const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-';
+
+//@desc   Send a OTP to verify users email
+//@route  POST /api/users/sendOtp
+//@access Public
+const sendOtp = asyncHandler (async (req, res)=>{
+  const { email, reqType } = req.body;
+  if (!email || !email.includes('@')) {
+    res.status(400);
+    throw new Error("Please provide a valid mobile number.");
+  }
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  
+  req.app.locals.otpStore[email] = otp;
+
+  try {
+    await sendOTPEmail(email, otp, reqType);
+    res.status(200).json({ message: "OTP sent successfully!" });
+  } catch (err) {
+    console.error('Error sending OTP:', err);
+    res.status(442).json({ message: 'Failed to send OTP' });
+  }
+});
+
+//@desc   verify the OTP sent to user email
+//@route  POST /api/users/verifyOtp
+//@access Public
+const verifyOtp = asyncHandler (async (req, res)=>{
+  const { email, otp, reqType } = req.body;
+
+  if (!otp || otp.length !== 6) {
+    res.status(400);
+    throw new Error("Please provide a valid OTP.");
+  }
+
+  const storedOtp = req.app.locals.otpStore[email];
+  
+  if (storedOtp && storedOtp === otp) {
+    req.app.locals.otpStore[email] = "verified";
+    if (reqType === "resetPassword") {
+      delete req.app.locals.otpStore[email];
+      
+      const user = await User.findOne({ email });
+      if (!user) {
+        res.status(404);
+        throw new Error("User not found.");
+      }
+      
+      let generatedPassword = ""
+      for (let i = 1, n = charset.length; i <= 15; ++i) {
+        generatedPassword += charset.charAt(Math.floor(Math.random() * n));
+      }
+      user.password = generatedPassword;
+      await user.save();
+      try {
+        await sendNewPasswordEmail(email, generatedPassword);
+      } catch (err) {
+        console.log('Error sending reset password email:', err);
+        res.status(442).json({ message: "Failed to send reset password email" });
+        return;
+      }
+    }
+    res.status(200).json({ message: "OTP verified successfully!" });
+  } else {
+    res.status(400).json({ message: "Invalid OTP. Please try again." });
+  }
+});
 
 //@desc   Auth user & get the token
 //@route  POST /api/users/login
@@ -24,7 +93,6 @@ const authUser = asyncHandler (async (req, res)=>{
     res.status(401)
     throw new Error("Invalid email or password")
   }
-  // res.send("Auth user.")
 })
 
 //@desc   Register user
@@ -38,12 +106,21 @@ const registerUser = asyncHandler (async (req, res)=>{
     res.status(400)
     throw new Error("User Already Exists")
   }
+
+  if ( req.app.locals.otpStore[email] && req.app.locals.otpStore[email] !== "verified") {
+    res.status(400)
+    throw new Error("Please verify your email with OTP before registration.")
+  }
+   
   const user = await User.create({
     name,
     email,
     mobileNo,
     password
   })
+
+  delete req.app.locals.otpStore[email];
+  
   if(user){
     generateToken(res, user._id)
 
@@ -190,7 +267,9 @@ const updateUsersByID = asyncHandler (async (req, res)=>{
   }
 })
 
-export { authUser, 
+export { sendOtp,
+  verifyOtp,
+  authUser, 
   registerUser, 
   logoutUser, 
   getUserProfile, 
