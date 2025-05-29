@@ -124,7 +124,6 @@ const RegisterScreen = () => {
                         return;
                       }
                       try {
-                        console.log("Sending OTP to:", email);
                         const res = await sendOtp({ email, reqType: "register" }).unwrap();
                         if (res.success) {
                           toast.success(res.message);

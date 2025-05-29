@@ -23,7 +23,7 @@ const sendOtp = asyncHandler (async (req, res)=>{
     if ( reqType === "register" && userExists) {
       res.status(400)
       throw new Error("User Already Exists")
-    } else if (reqType === "resetPassword" && !userExists) {
+    } else if (reqType !== "register" && !userExists) {
       res.status(400)
       throw new Error("User Doesn't Exists");
     }
@@ -204,7 +204,8 @@ const updateUserProfile = asyncHandler (async (req, res)=>{
       name: updateUser.name,
       email: updateUser.email,
       mobileNo: updateUser.mobileNo,
-      isAdmin: updateUser.isAdmin
+      isAdmin: updateUser.isAdmin,
+      loggedInTime: new Date().toISOString()
     })
   } else{
       res.status(404)

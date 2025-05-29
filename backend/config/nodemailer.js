@@ -74,7 +74,7 @@ export const sendNewPasswordEmail = async (email, newPassword) => {
               ${newPassword}
             </span>
           </div>
-          <p>We recommend you log in using this password and change it immediately from your profile settings for security purposes.</p>
+          <p>We recommend you <a href="https://adhunika-ecom-platform.onrender.com/login">log in</a> using this password and change it immediately from your profile settings for security purposes.</p>
           <p>If you did not request this change, please contact our support team immediately.</p>
           <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;" />
           <p style="font-size: 14px; color: #888;">Best regards,<br><strong>Adhunika Team</strong></p>
