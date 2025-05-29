@@ -19,11 +19,19 @@ const sendOtp = asyncHandler (async (req, res)=>{
   req.app.locals.otpStore[email] = otp;
 
   try {
+    const userExists = await User.findOne({ email })
+    if ( reqType === "register" && userExists) {
+      res.status(400)
+      throw new Error("User Already Exists")
+    } else if (reqType === "resetPassword" && !userExists) {
+      res.status(400)
+      throw new Error("User Doesn't Exists");
+    }
     await sendOTPEmail(email, otp, reqType);
-    res.status(200).json({ message: "OTP sent successfully!" });
+    res.status(200).json({ success: true, message: "OTP sent successfully!", data: email });
   } catch (err) {
-    console.error('Error sending OTP:', err);
-    res.status(442).json({ message: 'Failed to send OTP' });
+    (res.status !== 400) && res.status(442);
+    res.json({ success: false, message: err.message || "Failed to send OTP" });
   }
 });
 
@@ -56,18 +64,23 @@ const verifyOtp = asyncHandler (async (req, res)=>{
         generatedPassword += charset.charAt(Math.floor(Math.random() * n));
       }
       user.password = generatedPassword;
-      await user.save();
+      try {
+        await user.save();
+      } catch (err) {
+        res.status(400).json({success: false, message : "Unable to reset password."})
+        return;
+      }
       try {
         await sendNewPasswordEmail(email, generatedPassword);
       } catch (err) {
         console.log('Error sending reset password email:', err);
-        res.status(442).json({ message: "Failed to send reset password email" });
+        res.status(442).json({ success: true, message: "Failed to send reset password email" });
         return;
       }
     }
-    res.status(200).json({ message: "OTP verified successfully!" });
+    res.status(200).json({ success: true, message: "OTP verified successfully!" });
   } else {
-    res.status(400).json({ message: "Invalid OTP. Please try again." });
+    res.status(400).json({ success: false, message: "Invalid OTP. Please try again." });
   }
 });
 

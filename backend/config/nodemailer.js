@@ -18,7 +18,7 @@ export const sendOTPEmail = async (email, otp, type = 'register') => {
 
   const heading =
     type === 'register'
-      ? 'Welcome to <span style="color: #ef233c;">Adhunika</span>!'
+      ? 'Welcome to <span style="color:#2f1cd9;">Adhunika</span>!'
       : 'Password Reset Request';
 
   const message =
@@ -42,7 +42,7 @@ export const sendOTPEmail = async (email, otp, type = 'register') => {
           <p>Hello there,</p>
           <p>${message}</p>
           <div style="text-align: center; margin: 30px 0;">
-            <span style="display: inline-block; padding: 15px 30px; font-size: 24px; letter-spacing: 5px; font-weight: bold; color: #ffffff; background:rgb(20, 30, 115); border-radius: 8px;">
+            <span style="display: inline-block; padding: 15px 30px; font-size: 24px; letter-spacing: 5px; font-weight: bold; color: #ffffff; background:#141e73; border-radius: 8px;">
               ${otp}
             </span>
           </div>
