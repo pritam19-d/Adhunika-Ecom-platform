@@ -20,7 +20,7 @@ const ProfileScreen = () => {
   const [mobileNo, setMobileNo] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isverified, setIsVerified] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showOTPModal, setShowOTPModal] = useState(false);
 
@@ -80,22 +80,6 @@ const ProfileScreen = () => {
       }
     }
 
-  const handleSendOtp = async () => {
-    if (!email ) {
-      toast.error("Please enter your email address to verify")
-      return;
-    }
-    try {
-      const res = await sendOtp({ email, reqType: "register" }).unwrap();
-      if (res.success) {
-        toast.success(res.message);
-        setShowOTPModal(true);
-      }
-    } catch (err) {
-      toast.error(err?.data?.message || err.message || "Failed to send OTP");
-    }
-  }
-
   return (
     <Row>
           <Meta title={`Adhunika | ${userInfo.name}`}/>
@@ -118,8 +102,8 @@ const ProfileScreen = () => {
                 type="email"
                 placeholder="example@email.com"
                 value={email}
-                onChange={(e) => !isverified && setEmail(e.target.value)}
-                readOnly={isverified}
+                onChange={(e) => !isVerified && setEmail(e.target.value)}
+                readOnly={isVerified}
               />
               <span style={{
                 position: "absolute",
@@ -127,12 +111,26 @@ const ProfileScreen = () => {
                 top: "50%",
                 transform: "translateY(-50%)",
               }}>
-                {isverified ? <FaCheck /> : 
+                {isVerified ? <FaCheck /> : 
                   sendingOtp ? <div className="spinner-border" role="status" /> :
                   userInfo?.email !== email && <button
                     className="btn btn-outline-dark border-0 btn-sm"
-                    onClick={()=>handleSendOtp}
-                    disabled={!email || !email.includes("@") || !email.includes(".") || isverified || sendingOtp}
+                    onClick={async () => {
+                      if (!email ) {
+                        toast.error("Please enter your email address to verify")
+                        return;
+                      }
+                      try {
+                        const res = await sendOtp({ email, reqType: "register" }).unwrap();
+                        if (res.success) {
+                          toast.success(res.message);
+                          setShowOTPModal(true);
+                        }
+                      } catch (err) {
+                        toast.error(err?.data?.message || err.message || "Failed to send OTP");
+                      }
+                    }}
+                    disabled={!email || !email.includes("@") || !email.includes(".") || isVerified || sendingOtp}
                   ><b>Verify</b></button>
                 }
               </span>

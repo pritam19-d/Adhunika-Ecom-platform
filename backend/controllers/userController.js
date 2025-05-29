@@ -124,30 +124,32 @@ const registerUser = asyncHandler (async (req, res)=>{
     res.status(400)
     throw new Error("Please verify your email with OTP before registration.")
   }
-   
-  const user = await User.create({
-    name,
-    email,
-    mobileNo,
-    password
-  })
-
-  delete req.app.locals.otpStore[email];
-  
-  if(user){
-    generateToken(res, user._id)
-
-    res.status(201).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      mobileNo: user.mobileNo,
-      isAdmin: user.isAdmin,
-      loggedInTime: new Date().toISOString()
+  if ( req.app.locals.otpStore[email] && req.app.locals.otpStore[email] === "verified") {
+    const user = await User.create({
+      name,
+      email,
+      mobileNo,
+      password
     })
+    delete req.app.locals.otpStore[email];
+    if(user){
+      generateToken(res, user._id)
+
+      res.status(201).json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        mobileNo: user.mobileNo,
+        isAdmin: user.isAdmin,
+        loggedInTime: new Date().toISOString()
+      })
+    } else {
+      res.status(400)
+      throw new Error("Invald User data")
+    }
   } else {
     res.status(400)
-    throw new Error("Invald User data")
+    throw new Error("Please verify your email with OTP before registration.")
   }
 })
 
@@ -190,15 +192,25 @@ const getUserProfile = asyncHandler (async (req, res)=>{
 const updateUserProfile = asyncHandler (async (req, res)=>{
   const user = await User.findById(req.user._id)
 
+  const bodyEmail = req.body.email || "";
+
+  if (user.email !== bodyEmail && (req.app.locals.otpStore[bodyEmail] !== "verified" || !req.app.locals.otpStore[bodyEmail])) {
+    res.status(400)
+    throw new Error("Please verify your email with OTP before updating it.");
+  }
+
   if(user){
     user.name = req.body.name || user.name
-    user.email = req.body.email || user.email
+    user.email = bodyEmail || user.email
     user.mobileNo = req.body.mobileNo || user.mobileNo
     if(req.body.password){
       user.password = req.body.password
     }
+    console.log((user.email !== bodyEmail && (req.app.locals.otpStore[bodyEmail] !== "verified" || !req.app.locals.otpStore[bodyEmail])), bodyEmail, user.email);
     
     const updateUser = await user.save()
+    delete req.app.locals.otpStore[bodyEmail];
+
     res.status(200).json({
       _id: updateUser._id,
       name: updateUser.name,
@@ -208,8 +220,8 @@ const updateUserProfile = asyncHandler (async (req, res)=>{
       loggedInTime: new Date().toISOString()
     })
   } else{
-      res.status(404)
-      throw new Error("User not found")
+    res.status(404)
+    throw new Error("User not found")
   }
 })
 
