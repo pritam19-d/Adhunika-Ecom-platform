@@ -7,9 +7,10 @@ import { toast } from "react-toastify"
 import Message from "../components/Message"
 import Loader from "../components/Loader"
 import Meta from "../components/Meta.jsx"
-import { FaTimes, FaEye, FaEyeSlash } from "react-icons/fa"
-import { useProfileMutation } from "../slicers/usersApiSlice"
-import { setCredentials } from "../slicers/authSlice"
+import VerifyOTPModal from "../components/VerifyOTPModal.jsx"
+import { FaTimes, FaEye, FaEyeSlash, FaCheck } from "react-icons/fa"
+import { useProfileMutation, useSendOtpMutation, useVerifyOtpMutation } from "../slicers/usersApiSlice"
+import { logout, setCredentials } from "../slicers/authSlice"
 import { useGetMyOrdersQuery } from "../slicers/orderApiSlices"
 import { dateFormatting } from "../constants.js"
 
@@ -18,16 +19,19 @@ const ProfileScreen = () => {
   const [email, setEmail] = useState("")
   const [mobileNo, setMobileNo] = useState("")
   const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isverified, setIsVerified] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showOTPModal, setShowOTPModal] = useState(false);
 
   const dispatch = useDispatch()
 
   const { userInfo } = useSelector((state) => state.auth)
 
   const [updateProfile, { isLoading: loadingUpdateProfile }] = useProfileMutation()
-
-  const { data: orders, isLoading, error } = useGetMyOrdersQuery()
+  const { data: orders, isLoading, error } = useGetMyOrdersQuery();
+  const [sendOtp, {isLoading: sendingOtp}] = useSendOtpMutation();
+  const [verifyOtp, {isLoading: verifyingOtp}] = useVerifyOtpMutation();
 
   useEffect(() => {
     if (userInfo) {
@@ -41,18 +45,54 @@ const ProfileScreen = () => {
     e.preventDefault()
     if (password !== confirmPassword) {
       toast.error("Retype the Password correctly")
-    } else if (password.length < 6){
+    } else if (password && (password.length < 6)){
       toast.error("Your password must contains atleast 6 characters")
     } else if (mobileNo.length < 10){
       toast.warning("Please re-check your mobile number")
     } else {
       try {
         const res = await updateProfile({ _id: userInfo._id, name, email, mobileNo, password }).unwrap()
-        dispatch(setCredentials(res))
-        toast.success("Profile Updated Successfully")
+        !password && !email ? dispatch(setCredentials({ ...res })) :dispatch(logout())
+        toast.success(`Profile Updated Successfully.\n${(password || email) && `Please login again with your new ${password ? "password" : "email"}`}`)
       } catch (err) {
         toast.error(err?.data?.message || err?.error)
       }
+    }
+  }
+
+  const handleOTPSubmit = async (otp) => {
+      try {
+        if (!otp || otp.length !== 6) {
+          toast.error("Please enter a valid 6-digit OTP");
+          return;
+        }
+        const res = await verifyOtp({ email, otp, reqType: "register" }).unwrap();
+        if (res.success) {
+          setIsVerified(true);
+          res?.data?.email && setEmail(res.data.email);
+          toast.success("Email verified successfully!");
+          setShowOTPModal(false);
+        } else {
+          toast.error(res.data.message || "OTP verification failed");
+        }
+      } catch (err) {
+        toast.error(err?.response?.data?.message || err.message || "Failed to verify OTP");
+      }
+    }
+
+  const handleSendOtp = async () => {
+    if (!email ) {
+      toast.error("Please enter your email address to verify")
+      return;
+    }
+    try {
+      const res = await sendOtp({ email, reqType: "register" }).unwrap();
+      if (res.success) {
+        toast.success(res.message);
+        setShowOTPModal(true);
+      }
+    } catch (err) {
+      toast.error(err?.data?.message || err.message || "Failed to send OTP");
     }
   }
 
@@ -71,14 +111,32 @@ const ProfileScreen = () => {
               onChange={(e) => setName(e.target.value)}
             ></Form.Control>
           </Form.Group>
-          <Form.Group controlId="email" className="my-2">
-            <Form.Label>Email Address</Form.Label>
-            <Form.Control
-              type="email"
-              placeholder="Enter your email ID"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            ></Form.Control>
+          <Form.Group controlId="email" className="my-3">
+            <Form.Label>Email Address*</Form.Label>
+            <div style={{ position: "relative" }}>
+              <Form.Control
+                type="email"
+                placeholder="example@email.com"
+                value={email}
+                onChange={(e) => !isverified && setEmail(e.target.value)}
+                readOnly={isverified}
+              />
+              <span style={{
+                position: "absolute",
+                right: "10px",
+                top: "50%",
+                transform: "translateY(-50%)",
+              }}>
+                {isverified ? <FaCheck /> : 
+                  sendingOtp ? <div className="spinner-border" role="status" /> :
+                  userInfo?.email !== email && <button
+                    className="btn btn-outline-dark border-0 btn-sm"
+                    onClick={()=>handleSendOtp}
+                    disabled={!email || !email.includes("@") || !email.includes(".") || isverified || sendingOtp}
+                  ><b>Verify</b></button>
+                }
+              </span>
+            </div>
           </Form.Group>
           <Form.Group controlId="mobileNo" className="my-3">
             <Form.Label>Mobile number</Form.Label>
@@ -180,6 +238,12 @@ const ProfileScreen = () => {
             </Table>
           )}
       </Col>
+      <VerifyOTPModal
+        show={showOTPModal}
+        handleClose={() => setShowOTPModal(false)}
+        handleVerify={handleOTPSubmit}
+        isVerifying = {verifyingOtp}
+      />
     </Row>
   )
 }

@@ -7,7 +7,7 @@ const PrivateRoute = () => {
   const { userInfo } = useSelector(state => state.auth)
 
   const dispatch = useDispatch()
-  const isCookieExists = new Date(userInfo.loggedInTime).getTime() + 1 * 24 * 60 * 60 * 1000 > new Date().getTime()
+  const isCookieExists = new Date(userInfo?.loggedInTime).getTime() + 5 * 24 * 60 * 60 * 1000 > new Date().getTime()
   !isCookieExists && dispatch(logout())
   return userInfo && isCookieExists ? <Outlet /> : <Navigate to="/login" replace />
 }

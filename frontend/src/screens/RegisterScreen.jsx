@@ -1,28 +1,32 @@
-import React from 'react'
-import { useState, useEffect } from "react"
+import React, { useState, useEffect }  from 'react'
+import { toast } from "react-toastify"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import { Form, Button, Row, Col, Card } from "react-bootstrap"
-import { FaEye, FaEyeSlash } from "react-icons/fa"
+import { FaCheck, FaEye, FaEyeSlash } from "react-icons/fa"
 import { useDispatch, useSelector } from "react-redux"
 import FormContainer from "../components/FormContainer.jsx"
 import Loader from "../components/Loader.jsx"
 import Meta from "../components/Meta.jsx"
-import { useRegisterMutation } from "../slicers/usersApiSlice.js"
+import { useRegisterMutation, useSendOtpMutation, useVerifyOtpMutation } from "../slicers/usersApiSlice.js"
 import { setCredentials } from "../slicers/authSlice.js"
-import { toast } from "react-toastify"
+import VerifyOTPModal from "../components/VerifyOTPModal.jsx"
 
 const RegisterScreen = () => {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [mobileNo, setMobileNo] = useState("")
   const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isverified, setIsVerified] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showOTPModal, setShowOTPModal] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [register, { isLoading }] = useRegisterMutation()
+  const [register, { isLoading }] = useRegisterMutation();
+  const [sendOtp, {isLoading: sendingOtp}] = useSendOtpMutation();
+  const [verifyOtp, {isLoading: verifyingOtp}] = useVerifyOtpMutation();
 
   const { userInfo } = useSelector((state) => state.auth)
 
@@ -38,7 +42,9 @@ const RegisterScreen = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault()
-    if (password !== confirmPassword) {
+    if (!name || !email || !mobileNo || !password || !confirmPassword) {
+      toast.error("Please fill all the fields")
+    } else if (password !== confirmPassword) {
       toast.error("Please retype the 'Confirm Password' correctly")
     } else if (password.length < 6){
       toast.error("Your password must contains atleast 6 characters")
@@ -55,6 +61,26 @@ const RegisterScreen = () => {
     }
   }
 
+  const handleOTPSubmit = async (otp) => {
+    try {
+      if (!otp || otp.length !== 6) {
+        toast.error("Please enter a valid 6-digit OTP");
+        return;
+      }
+      const res = await verifyOtp({ email, otp, reqType: "register" }).unwrap();
+      if (res.success) {
+        setIsVerified(true);
+        res?.data?.email && setEmail(res.data.email);
+        toast.success("Email verified successfully!");
+        setShowOTPModal(false);
+      } else {
+        toast.error(res.data.message || "OTP verification failed");
+      }
+    } catch (err) {
+      toast.error(err?.response?.data?.message || err.message || "Failed to verify OTP");
+    }
+  }
+
   return (
     <Card>
       <Meta title={"Adhunika | Register"}/>
@@ -67,19 +93,51 @@ const RegisterScreen = () => {
               type="name"
               placeholder="Sourav Ganguli"
               value={name}
+              onChange={(e) => setName(e.target.value.slice(0, 50))}
               required
-              onChange={(e) => setName(e.target.value)}
             ></Form.Control>
           </Form.Group>
           <Form.Group controlId="email" className="my-3">
             <Form.Label>Email Address*</Form.Label>
-            <Form.Control
-              type="email"
-              placeholder="example@email.com"
-              value={email}
-              required
-              onChange={(e) => setEmail(e.target.value)}
-            ></Form.Control>
+            <div style={{ position: "relative" }}>
+              <Form.Control
+                type="email"
+                placeholder="example@email.com"
+                value={email}
+                required
+                onChange={(e) => !isverified && setEmail(e.target.value)}
+                readOnly={isverified}
+              />
+              <span style={{
+                position: "absolute",
+                right: "10px",
+                top: "50%",
+                transform: "translateY(-50%)",
+              }}>
+                {isverified ? <FaCheck /> : 
+                  sendingOtp ? <div className="spinner-border" role="status" /> :
+                  <button 
+                    className="btn btn-outline-dark border-0 btn-sm"
+                    onClick={ async () => {
+                      if (!email ) {
+                        toast.error("Please enter your email address to verify")
+                        return;
+                      }
+                      try {
+                        const res = await sendOtp({ email, reqType: "register" }).unwrap();
+                        if (res.success) {
+                          toast.success(res.message);
+                          setShowOTPModal(true);
+                        }
+                      } catch (err) {
+                        toast.error(err?.data?.message || err.message || "Failed to send OTP");
+                      }
+                    }}
+                    disabled={!email || !email.includes("@") || !email.includes(".") || isverified || sendingOtp}
+                  ><b>Verify</b></button>
+                }
+              </span>
+            </div>
           </Form.Group>
           <Form.Group controlId="mobileNo" className="my-3">
             <Form.Label>Mobile number*</Form.Label>
@@ -87,11 +145,7 @@ const RegisterScreen = () => {
               type="text"
               placeholder="1234567890"
               value={mobileNo}
-              required
-              onChange={(e) => {
-                e.target.value.length > 10 ? toast.warn("Mobile number should be 10 characters") :
-                setMobileNo(e.target.value)
-              }}
+              onChange={(e) => /^\d*$/.test(e.target.value) && setMobileNo(e.target.value.slice(0, 10))}
             />
           </Form.Group>
           <Form.Group controlId="password" className="my-3">
@@ -147,6 +201,12 @@ const RegisterScreen = () => {
           </Col>
         </Row>
       </FormContainer>
+      <VerifyOTPModal
+        show={showOTPModal}
+        handleClose={() => setShowOTPModal(false)}
+        handleVerify={handleOTPSubmit}
+        isVerifying = {verifyingOtp}
+      />
     </Card>
   )
 }

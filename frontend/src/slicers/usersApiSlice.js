@@ -3,6 +3,22 @@ import { apiSlice } from "./apiSlice.js";
 
 export const usersApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder)=>({
+    sendOtp : builder.mutation({
+      query : (data)=> ({
+        url : `${USERS_URL}/sendOtp`,
+        method: "POST",
+        body: data
+      }),
+      keepUnusedDataFor: 5
+    }),
+    verifyOtp : builder.mutation({
+      query : (data)=> ({
+        url : `${USERS_URL}/verifyOtp`,
+        method: "POST",
+        body: data
+      }),
+      keepUnusedDataFor: 5
+    }),
     login : builder.mutation({
       query : (data)=> ({
         url : `${USERS_URL}/auth`,
@@ -63,4 +79,4 @@ export const usersApiSlice = apiSlice.injectEndpoints({
   })
 })
 
-export const { useLoginMutation, useLogoutMutation, useRegisterMutation, useProfileMutation, useGetUsersQuery, useDeleteAnUserMutation, useGetUserDetailQuery, useUpdateUserMutation } = usersApiSlice
+export const { useSendOtpMutation, useVerifyOtpMutation, useLoginMutation, useLogoutMutation, useRegisterMutation, useProfileMutation, useGetUsersQuery, useDeleteAnUserMutation, useGetUserDetailQuery, useUpdateUserMutation } = usersApiSlice

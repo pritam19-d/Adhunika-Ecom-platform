@@ -84,6 +84,7 @@ const LoginScreen = () => {
                 }}
               >{showPassword ? <FaEyeSlash /> : <FaEye />}</span>
             </div>
+            Forgot Password? <Link to="/forgot">Reset Here</Link>
           </Form.Group>
           <Button type="submit" variant="dark" className="mt-2" disabled={isLoading}>
             Sign In
