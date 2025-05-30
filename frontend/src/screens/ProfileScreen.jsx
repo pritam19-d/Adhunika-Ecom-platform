@@ -1,18 +1,18 @@
-import React from 'react'
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
+import { Link } from "react-router-dom"
 import { Table, Form, Button, Row, Col } from "react-bootstrap"
-import { LinkContainer } from "react-router-bootstrap"
 import { useDispatch, useSelector } from "react-redux"
 import { toast } from "react-toastify"
 import Message from "../components/Message"
 import Loader from "../components/Loader"
 import Meta from "../components/Meta.jsx"
 import VerifyOTPModal from "../components/VerifyOTPModal.jsx"
-import { FaTimes, FaEye, FaEyeSlash, FaCheck } from "react-icons/fa"
+import { FaTimes, FaEye, FaEyeSlash, FaCheck, FaInfoCircle } from "react-icons/fa"
 import { useProfileMutation, useSendOtpMutation, useVerifyOtpMutation } from "../slicers/usersApiSlice"
 import { logout, setCredentials } from "../slicers/authSlice"
 import { useGetMyOrdersQuery } from "../slicers/orderApiSlices"
 import { dateFormatting } from "../constants.js"
+import AvatarGroup from "../components/AvatarGroup.jsx"
 
 const ProfileScreen = () => {
   const [name, setName] = useState("")
@@ -200,7 +200,8 @@ const ProfileScreen = () => {
               <thead>
                 <tr>
                   <th>Sl no.</th>
-                  <th>ID</th>
+                  <th></th>
+                  <th>Order ID</th>
                   <th>Date</th>
                   <th>Total</th>
                   <th>Paid</th>
@@ -210,9 +211,12 @@ const ProfileScreen = () => {
               </thead>
               <tbody>
                 {orders.map((order, index) => (
-                  <tr key={order._id}>
+                  <tr key={order._id} className="my-10">
                     <td>{++index}.</td>
-                    <td>{order._id}</td>
+                    <td><AvatarGroup avatars={order.orderItems} size={35} /></td>
+                    <td>
+                      <Link className="text-decoration-none" to={`/order/${order._id}`}><span>...{order._id.slice(-9)}</span></Link>
+                    </td>
                     <td>{dateFormatting(order.createdAt).substring(0, 10)}</td>
                     <td>{order.totalPrice}</td>
                     <td>
@@ -226,9 +230,9 @@ const ProfileScreen = () => {
                       ) : <FaTimes style={{ color: "red" }} />}
                     </td>
                     <td>
-                      <LinkContainer to={`/order/${order._id}`}>
-                        <Button variant="dark" className="btn btn-dark btn-sm">Details</Button>
-                      </LinkContainer>
+                      <Link to={`/order/${order._id}`}>
+                        <FaInfoCircle />
+                      </Link>
                     </td>
                   </tr>
                 ))}

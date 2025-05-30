@@ -14,10 +14,12 @@ An Ecommerce platform for Adhunika Shop in Kalna
 - Product pagination
 - Product search feature
 - User profile with orders
+- Email verification via OTP on Sign Up
+- Reset Password 
 - Admin product management
 - Admin user management
-- Admin Order details page
-- Mark orders as delivered option
+- Admin order details page
+- Admin order management
 - Checkout process (shipping, payment method, etc)
 - Razorpay / credit card integration
 - Cash On Delivery to place an order without paying
@@ -33,6 +35,13 @@ PORT = 5000
 MONGO_URI = your mongodb uri
 JWT_SECRET = your jwt secret
 PAYPAL_CLIENT_ID = your paypal client id
+CLOUDINARY_CLOUD_NAME = your cloudinary cloud name
+CLOUDINARY_API_KEY = your cloudinary api key
+CLOUDINARY_API_SECRET = your cloudinary api secret
+RAZORPAY_KEY_ID = your razorpay key id 
+RAZORPAY_SECRET = your razorpay secret
+EMAIL_USER = your_email_user
+EMAIL_PASS = your_email_app_password
 ```
 
 ### Install Dependencies (frontend & backend)
