@@ -1,7 +1,7 @@
 import React from 'react'
-import { LinkContainer } from "react-router-bootstrap"
-import { Table, Button } from "react-bootstrap"
-import { FaTimes } from "react-icons/fa"
+import { Link } from "react-router-dom"
+import { Table } from "react-bootstrap"
+import { FaInfoCircle, FaTimes } from "react-icons/fa"
 import Message from "../../components/Message"
 import Loader from "../../components/Loader"
 import Meta from "../../components/Meta"
@@ -21,9 +21,9 @@ const OrderListScreen = () => {
             <thead>
               <tr>
                 <th>Sl no.</th>
-                <th>ID</th>
+                <th>Order ID</th>
                 <th>User</th>
-                <th>Date</th>
+                <th>Ordered Date</th>
                 <th>Total</th>
                 <th>Paid</th>
                 <th>Delivered</th>
@@ -48,9 +48,9 @@ const OrderListScreen = () => {
                     ) : <FaTimes style={{ color: "red" }} />}
                   </td>
                   <td>
-                    <LinkContainer to={`/order/${order._id}`}>
-                      <Button variant="outline-info" className="btn btn-sm">Details</Button>
-                    </LinkContainer>
+                    <Link to={`/order/${order._id}`}>
+                      <FaInfoCircle size={20} title="Order Details" />
+                    </Link>
                   </td>
                 </tr>
               ))}

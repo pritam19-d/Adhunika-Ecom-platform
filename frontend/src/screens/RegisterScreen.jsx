@@ -61,6 +61,23 @@ const RegisterScreen = () => {
     }
   }
 
+  const handleSendOtp = async () => {
+    if (!email ) {
+      toast.error("Please enter your email address to verify")
+      return;
+    } else {
+      try {
+        const res = await sendOtp({ email, reqType: "register" }).unwrap();
+        if (res.success) {
+          toast.success(res.message);
+          setShowOTPModal(true);
+        }
+      } catch (err) {
+        toast.error(err?.data?.message || err.message || "Failed to send OTP");
+      }
+    }
+  }
+
   const handleOTPSubmit = async (otp) => {
     try {
       if (!otp || otp.length !== 6) {
@@ -114,25 +131,11 @@ const RegisterScreen = () => {
                 top: "50%",
                 transform: "translateY(-50%)",
               }}>
-                {isverified ? <FaCheck /> : 
+                {isverified ? <FaCheck color="green"/> : 
                   sendingOtp ? <div className="spinner-border" role="status" /> :
                   <button 
                     className="btn btn-outline-dark border-0 btn-sm"
-                    onClick={ async () => {
-                      if (!email ) {
-                        toast.error("Please enter your email address to verify")
-                        return;
-                      }
-                      try {
-                        const res = await sendOtp({ email, reqType: "register" }).unwrap();
-                        if (res.success) {
-                          toast.success(res.message);
-                          setShowOTPModal(true);
-                        }
-                      } catch (err) {
-                        toast.error(err?.data?.message || err.message || "Failed to send OTP");
-                      }
-                    }}
+                    onClick={ async () => {handleSendOtp()}}
                     disabled={!email || !email.includes("@") || !email.includes(".") || isverified || sendingOtp}
                   ><b>Verify</b></button>
                 }

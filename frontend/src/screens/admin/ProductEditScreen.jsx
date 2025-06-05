@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
-import { Form, Button } from "react-bootstrap"
+import { Form, Button, Spinner } from "react-bootstrap"
 import Message from "../../components/Message"
 import Loader from "../../components/Loader"
 import FormContainer from "../../components/FormContainer"
@@ -55,7 +55,7 @@ const ProductEditScreen = () => {
     try {
       const res = await uploadProductImage(formData).unwrap()
       toast.success(res.message)
-      setImage(res.secure_url)
+      setImage(res.secure_url || res.publicUrl)
     } catch (err) {
       toast.error(err?.data?.message || err.error)
     }
@@ -81,7 +81,6 @@ const ProductEditScreen = () => {
       <FormContainer>
         <h1>Edit Product</h1>
         {loadingUpdate && <Loader />}
-        {loadingUpload && <Loader />}
         {isLoading ? <Loader />: 
         error ? <Message variant="danger">{error}</Message>:(
           <Form onSubmit={submitHandler}>
@@ -109,12 +108,11 @@ const ProductEditScreen = () => {
                 <Form.Control
                   type="text"
                   placeholder="Image url"
-                  value={image}
+                  value={loadingUpload ? "Uploading..." : image}
                   readOnly
                   onChange={(e)=>setImage()}
                 />
                 <span
-                  onClick={copyHandler}
                   style={{
                     position: "absolute",
                     right: "10px",
@@ -125,12 +123,15 @@ const ProductEditScreen = () => {
                     alignItems: "center",
                     pointerEvents: isCopied ? "none" : "auto"
                   }}
-                >{isCopied ? <FaCheck /> : <FaCopy />}</span>
+                >{loadingUpload ? <Spinner animation="border" size="sm" /> : isCopied ? <FaCheck color="green"/> : <FaCopy onClick={copyHandler} />}</span>
               </div>
               <Form.Control
+                className="rounded-bottom"
                 type="file"
-                label="Upload File"
+                label="Upload Product Image"
+                accept="image/*"
                 onChange={uploadFileHandler}
+                disabled={loadingUpload}
               />
             </Form.Group>
             <Form.Group controlId="category" className="my-3">

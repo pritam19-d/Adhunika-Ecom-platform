@@ -1,10 +1,9 @@
-import path from "path"
-import express from "express"
-import multer from "multer"
-import dotenv from "dotenv"
-dotenv.config();
-import { v2 as cloudinary } from "cloudinary"
-const router = express.Router()
+import path from "path";
+import fs from "fs";
+import express from "express";
+import multer from "multer";
+import { v2 as cloudinary } from "cloudinary";
+const router = express.Router();
 
 // Cloudinary configuration
 cloudinary.config({
@@ -23,35 +22,47 @@ const storage = multer.diskStorage({
   }
 })
 
-function checkFileType(file, cb) {
-  const filetypes = /jpg|jpeg|png/
+function fileFilter(req, file, cb) {
+  const filetypes = /jpe?g|png|webp/;
+  const mimetypes = /image\/jpe?g|image\/png|image\/webp/;
+
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase())
-  const mimetype = filetypes.test(file.mimetype)
+  const mimetype = mimetypes.test(file.mimetype)
   if (extname && mimetype) {
-    return cb(null, true)
+    cb(null, true)
   } else {
-    cb("Images only!")
+    cb(new Error("Images only!"), false);
   }
 }
 
 const upload = multer({
-  storage
+  storage,
+  fileFilter,
 })
 
 router.post("/", upload.single("image"), async (req, res)=>{
   try {
-    const file = req.file.path;
-    const result = await cloudinary.uploader.upload(file, {
+    const filePath = req.file.path;
+    const result = await cloudinary.uploader.upload(filePath, {
       folder: 'products', // specify folder in Cloudinary
+      resource_type: 'image', // specify resource type
+      transformation: [
+        { width: 1000, crop: "scale" },
+        { quality: "auto" },
+        { fetch_format: "auto" }
+      ]
     });
+
+    fs.unlinkSync(filePath); // Delete the local file after upload
+  
     res.status(200).json({
       message: "Image Uploaded",
-      image: `/${req.file.path}`,
+      image: `/${filePath}`,
       secure_url: result.secure_url
     })
   } catch (error) {
-    res.status(500).json({ error: 'Image upload failed', details: error });
+    res.status(500).json({ error: "Image upload failed", details: error });
   }
 })
 
-export default router
+export default router;

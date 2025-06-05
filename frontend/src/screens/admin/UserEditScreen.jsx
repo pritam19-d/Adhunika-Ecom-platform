@@ -144,7 +144,7 @@ const UserEditScreen = () => {
                       alignItems: "center",
                       pointerEvents: isCopied ? "none" : "auto"
                     }}
-                  >{isCopied ? <FaCheck /> : <FaCopy />}</span>
+                  >{isCopied ? <FaCheck color="green"/> : <FaCopy />}</span>
                 </div>
                 <Form.Label>Set Password Length</Form.Label>
                 <div style={{ position: "relative" }}>

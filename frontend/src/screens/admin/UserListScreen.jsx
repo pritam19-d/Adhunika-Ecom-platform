@@ -50,9 +50,7 @@ const UserListScreen = () => {
                   <td><a href={`mailto:${user.email}`} style={{ textDecoration: "none" }}>{user.email}</a></td>
                   <td><a href={`tel:+91${user.mobileNo}`} style={{ textDecoration: "none" }}>+91 {user.mobileNo.substring(0, 5)} {user.mobileNo.substring(5, 10)}</a></td>
                   <td>
-                    {user.isAdmin ? (
-                      <FaCheck style={{ color: "green" }} />
-                    ) : <FaTimes style={{ color: "red" }} />}
+                    {user.isAdmin ? <FaCheck color="green" /> : <FaTimes color="red" />}
                   </td>
                   <td>
                     <LinkContainer to={`/admin/user/${user._id}/edit`}>

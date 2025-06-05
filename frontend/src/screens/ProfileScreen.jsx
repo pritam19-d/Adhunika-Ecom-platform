@@ -60,6 +60,20 @@ const ProfileScreen = () => {
     }
   }
 
+  const handleSendOtp = async () => {
+    if (!email ) {
+      toast.error("Please enter your email address to verify")
+    } else {
+      try {
+        const res = await sendOtp({ email, reqType: "register" }).unwrap();
+        if (res.success) {
+          toast.success(res.message);
+          setShowOTPModal(true);
+        }
+      } catch (err) {toast.error(err?.data?.message || err.message || "Failed to send OTP")}
+    }
+  }
+
   const handleOTPSubmit = async (otp) => {
       try {
         if (!otp || otp.length !== 6) {
@@ -111,25 +125,11 @@ const ProfileScreen = () => {
                 top: "50%",
                 transform: "translateY(-50%)",
               }}>
-                {isVerified ? <FaCheck /> : 
+                {isVerified ? <FaCheck color="green"/> : 
                   sendingOtp ? <div className="spinner-border" role="status" /> :
                   userInfo?.email !== email && <button
                     className="btn btn-outline-dark border-0 btn-sm"
-                    onClick={async () => {
-                      if (!email ) {
-                        toast.error("Please enter your email address to verify")
-                        return;
-                      }
-                      try {
-                        const res = await sendOtp({ email, reqType: "register" }).unwrap();
-                        if (res.success) {
-                          toast.success(res.message);
-                          setShowOTPModal(true);
-                        }
-                      } catch (err) {
-                        toast.error(err?.data?.message || err.message || "Failed to send OTP");
-                      }
-                    }}
+                    onClick={async () => {handleSendOtp()}}
                     disabled={!email || !email.includes("@") || !email.includes(".") || isVerified || sendingOtp}
                   ><b>Verify</b></button>
                 }
@@ -215,23 +215,23 @@ const ProfileScreen = () => {
                     <td>{++index}.</td>
                     <td><AvatarGroup avatars={order.orderItems} size={35} /></td>
                     <td>
-                      <Link className="text-decoration-none" to={`/order/${order._id}`}><span>...{order._id.slice(-9)}</span></Link>
+                      <Link className="text-decoration-none" to={`/order/${order._id}`}><span title={order._id}>...{order._id.slice(-9)}</span></Link>
                     </td>
                     <td>{dateFormatting(order.createdAt).substring(0, 10)}</td>
-                    <td>{order.totalPrice}</td>
+                    <td className="fw-semibold" style={{color: "black"}}>{order.totalPrice}</td>
                     <td>
                       {order.isPaid ? (
                         dateFormatting(order.paidAt).substring(0, 10)
-                      ) : <FaTimes style={{ color: "red" }} />}
+                      ) : <FaTimes color="red" size={22} title="Not Paid Yet" />}
                     </td>
                     <td>
                       {order.isDelivered ? (
                           dateFormatting(order.deliveredDate).substring(0, 10)
-                      ) : <FaTimes style={{ color: "red" }} />}
+                      ) : <FaTimes color="red" size={22} title="Not Delivered Yet" />}
                     </td>
                     <td>
                       <Link to={`/order/${order._id}`}>
-                        <FaInfoCircle />
+                        <FaInfoCircle size={20} title="Order Details" />
                       </Link>
                     </td>
                   </tr>
